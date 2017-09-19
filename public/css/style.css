@@ -1,0 +1,82 @@
+html, body, ul, ol, li, p,
+h1, h2, h3, h4, h5, h6,
+form, fieldset, a {
+margin: 0;
+padding: 0;
+border: 0;
+}
+body {
+font-size: 100.01%; /* Fix for some browser bugs */
+background-color: #EFEFEF;
+}
+body {
+    font: 12px verdana;
+    margin: 0px;
+    padding: 0px;
+    min-width: 850px;
+}
+body > header {
+    border-left-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-top: 3px solid red;
+    border-bottom: 1px solid #b5b5b5;
+    height: 70px;
+    margin: 0px;
+}
+body > header > * {
+    vertical-align: text-top;
+}
+nav {
+    background-color: #EFEFEF;
+    color: #5F5F5F;
+    margin: 0px;
+    padding: 10px;
+}
+body > header > nav {
+    display: inline-block;
+    float: right;
+    height: -webkit-fill-available;
+}
+nav .my_link{
+    margin: 4px 5px;
+    padding: 1px 10px;
+    cursor:pointer;
+    display:inline-block;
+    line-height: 24px;
+    border-radius:2px;
+    text-decoration: none;
+    color: #5F5F5F;
+    box-shadow: 2px 2px 2px #D0D0D0;
+    font-weight: bold;
+    border-left: 2px solid red;
+    background-color: #fff;
+}
+nav .my_link.logout {
+    float: right;
+}
+nav label {
+    margin-right: 10px;
+}
+#registration_number_form {
+    width: 800px;
+    background-color: #FFFFFF;
+    margin: 50px auto;
+    padding: 5px;
+    border: solid 1px #B5B5B5;
+}
+#registration_number_form > * {
+    text-align: center; 
+    display: block;
+    margin: 10px auto;
+}
+
+#registration_number_form label {
+    font-size: 42px;
+}
+
+#registration_number_form input {
+    font-size: 42px;
+}
