@@ -1,0 +1,8 @@
+<form action="" method="post" id="select_wash_program" class="main_form" accept-charset="utf-8">
+  <label for="reg_number">Wybierz program mycia</label>
+  <select name="wash_type">
+    {{#wash_types}}
+      <option value="{{id}}" data-description="{{description}}" {{#is_selected}}selected="selected"{{/is_selected}}>{{order_number}} - {{name}}</option>
+    {{/wash_types}}
+  </select>
+</form>

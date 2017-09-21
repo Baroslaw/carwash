@@ -60,23 +60,23 @@ nav .my_link.logout {
 nav label {
     margin-right: 10px;
 }
-#registration_number_form {
+.main_form {
     width: 800px;
     background-color: #FFFFFF;
     margin: 50px auto;
     padding: 5px;
     border: solid 1px #B5B5B5;
 }
-#registration_number_form > * {
+.main_form > * {
     text-align: center; 
     display: block;
     margin: 10px auto;
 }
 
-#registration_number_form label {
+.main_form label {
     font-size: 42px;
 }
 
-#registration_number_form input {
+.main_form input {
     font-size: 42px;
 }

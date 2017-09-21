@@ -6,6 +6,7 @@ const Views = require('koa-views');
 const KoaStatic = require('koa-static');
 const KoaBody = require('koa-body');
 const MySql = require('mysql2/promise');
+const Consolidate = require('consolidate');
 
 const app = new Koa();
 const router = new KoaRouter();
@@ -39,9 +40,6 @@ app.use(Views(__dirname + '/views', {
     }
 }));
 
-// Static files provider
-app.use(KoaStatic(__dirname + '/public'));
-
 // TODO - Errors handling middleware
 
 
@@ -51,7 +49,9 @@ router.post('/wash', koaBody, CheckRegistrationNumber);
 router.get('/wash/:id', WashForm);
 app.use(router.routes());
 
-// TODO - Default route handling
+// Static files provider
+app.use(KoaStatic(__dirname + '/public', { maxage: 1000*60*60 }));
+
 app.use(async ctx => {
     await ctx.render("PageNotFound");
 });
@@ -60,7 +60,12 @@ app.use(async ctx => {
 // TODO - move to other files 
 async function RegistrationNumberForm(ctx) {
     console.log("RegistationNumberForm");
-    await ctx.render('RegistrationNumberForm');
+
+    var viewModel = {
+        "content": await Consolidate.mustache('./views/RegistrationNumberForm.mustache', {})
+    };
+
+    await ctx.render('MainView', viewModel);
 }
 
 async function CheckRegistrationNumber(ctx) {
@@ -75,9 +80,22 @@ async function CheckRegistrationNumber(ctx) {
     ctx.redirect(`/wash/${id}`);
 }
 
-function WashForm(ctx) {
-    console.log("Wash called with id=" + ctx.params.id);
-    ctx.body = "Wash" + ctx.params.id;
+async function WashForm(ctx) {
+    console.log("Wash id=" + ctx.params.id);
+
+    var WashTypeModel = require('./models/wash_type');
+    
+    var wash_types = await WashTypeModel.GetWashTypes();
+    
+    var locals = {
+        "wash_types" : wash_types,
+        "id": ctx.params.id
+    };
+
+    var viewModel = {
+        "content": await Consolidate.mustache('./views/SelectWashingProgram.mustache', locals)
+    }
+    await ctx.render('MainView', viewModel);
 }
 
 app.listen(3000);
