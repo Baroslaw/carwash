@@ -12,10 +12,12 @@
     <header>
       <img src="/images/logo_v3.png" alt="logo"/>
       <img src="/images/michalec_v2.png" alt="logo2"/>
+      {{#user}}
       <nav>
-        <label>Kacper Myjak - Pracownik myjni</label>
-        <a class="my_link logout" href="Logout">Wyloguj</a>
+        <label>{{name}} - {{role}}</label>
+        <a class="my_link logout" href="/logout">Wyloguj</a>
       </nav>
+      {{/user}}
     </header>
     <section class="content">
       {{{content}}}

@@ -1,8 +1,20 @@
 <form action="" method="post" id="select_wash_program" class="main_form" accept-charset="utf-8">
-  <label for="reg_number">Wybierz program mycia</label>
-  <select name="wash_type">
+  <input type="hidden" name="reg_number" value="{{reg_number}}" />
+  <label>{{washingCountText}}</label>
+  {{#isFreeWash}}
+    <input type="hidden" name="free_wash" value="1" />
+    <label class="green_indication">Darmowe</label>
+  {{/isFreeWash}}
+  <div id="wash_types">
     {{#wash_types}}
-      <option value="{{id}}" data-description="{{description}}" {{#is_selected}}selected="selected"{{/is_selected}}>{{order_number}} - {{name}}</option>
+      <label class="noselect" for="wash_type_{{order_number}}">{{order_number}}
+        <input type="radio" id="wash_type_{{order_number}}" class="wash_type" name="wash_type" value="{{id}}" onchange='document.getElementById("submit_select_wash").disabled = false;'/>
+        <p class="description">{{name}}</p>
+      </label>
     {{/wash_types}}
-  </select>
+  </div>
+  <div class="actions_field">
+    <input id="submit_select_wash" type="submit" class="my_link" name="submit_select_wash" value="Wybierz" disabled="disabled"/>
+    <input type="submit" class="my_link" name="submit_cancel_wash" value="Anuluj"/>
+  </div>
 </form>

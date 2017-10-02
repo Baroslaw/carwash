@@ -66,6 +66,7 @@ nav label {
     margin: 50px auto;
     padding: 5px;
     border: solid 1px #B5B5B5;
+    color: #5F5F5F;
 }
 .main_form > * {
     text-align: center; 
@@ -75,8 +76,101 @@ nav label {
 
 .main_form label {
     font-size: 42px;
+    margin-bottom: 32px;
 }
 
-.main_form input {
+.main_form input, .main_form a, .main_form select {
     font-size: 42px;
+}
+.main_form p {
+    font-size: 24px;
+}
+
+.main_form select {
+    -webkit-appearance: none;
+    -webkit-border-radius: 2px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    background-image: url('../images/dd.png'), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+    background-position: 97% center;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    color: #555;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+}
+
+input#password {
+    width: 496px;
+}
+
+#wash_types label {
+    position: relative;
+    display: inline-block;
+    width: 96px;
+    height: 96px;
+    z-index: 1;
+    padding-top: 18px;
+    margin: 0 30px 30px 30px;
+}
+#wash_types input[type="radio"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 50%;
+    border: 2px solid #999;
+    box-shadow: 2px 2px 2px #D0D0D0;
+    transition: 0.2s all linear;
+    outline: none;
+    width: 96px;
+    height: 96px;
+    z-index: -1;
+    margin: 0;
+}
+#wash_types input[type="radio"]:checked {
+    background-color: #EE1C25;
+}
+#wash_types p.description {
+    position: absolute;
+    top: 107px;
+    left: -30px;
+    width: 156px;
+    font-size: 16px;
+}
+input[type="submit"], .main_form a {
+    padding: 1px 10px;
+    cursor:pointer;
+    border-radius:10px;
+    border: 1px solid #5F5F5F;
+    text-decoration: none;
+    color: #5F5F5F;
+    box-shadow: 2px 2px 2px #D0D0D0;
+    background-color: #fff;
+    display: inline-block;
+}
+.actions_field input[type="submit"] {
+    width: 200px;
+    margin: 0 20px;
+}
+input[type="submit"]:disabled {
+    color: #d5d5d5;
+}
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+  }
+.green_indication {
+    color: #33cc33;
 }

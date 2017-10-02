@@ -1,0 +1,9 @@
+<form action="" method="post" id="login" class="main_form" accept-charset="utf-8">
+    <label for="username">Zaloguj się</label>
+    <select autofocus name="username" id="username">
+    {{#users}}
+      <option value="{{.}}">{{.}}</option>
+    {{/users}}
+    </select>
+    <input type="password" name="password" id="password" placeholder="Hasło"/>
+</form>
