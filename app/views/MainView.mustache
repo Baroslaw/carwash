@@ -7,6 +7,12 @@
     <!--<base href="localhost:3000" />-->
     <title>Myjnia samochodowa</title>
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
+    <script src="/libs/jquery/jquery.js"></script>
+    <link href="/libs/noty/noty.css" rel="stylesheet" type="text/css"/>
+    <script src="/libs/noty/noty.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/main.js"></script>
   </head>
   <body>
     <header>
@@ -16,6 +22,9 @@
       <nav>
         <label>{{name}} - {{role}}</label>
         <a class="my_link logout" href="/logout">Wyloguj</a>
+        {{#isAdmin}}
+        <a class="my_link" href="/admin">Administacja</a>
+        {{/isAdmin}}
       </nav>
       {{/user}}
     </header>

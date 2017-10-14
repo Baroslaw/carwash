@@ -1,0 +1,53 @@
+{{> AdminMenu}}
+<div id="admin_content">
+    <a id="show_new_wash_type_button" class="add-new" title="Nowy typ mycia"></a>
+    <table>
+        <thead>
+            <tr>
+                <th>L.P.</th>
+                <th>Nazwa</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#washTypes}}
+            <tr data-id="{{id}}" data-name="{{name}}">
+                <td>{{order_number}}</td>
+                <td>{{name}}</td>
+                <td>{{description}}</td>
+                <td><a class="remove" href="/admin/washtypes/delete/{{id}}">Usuń</a></td>
+            </tr>
+        {{/washTypes}}
+        </tbody>
+    </table>
+    <div id="new_wash_type_modal" class="modal">
+        <form action="/admin/washtypes" method="post" class="modal">
+            <div class="form-header">
+                <h3>Nowy typ mycia</h3>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label for="order_number">L.P.</label>
+                    <input id="order_number" name="order_number" type="number"/>
+                </div>
+                <div class="form-field">
+                    <label for="wash_type_name">Nazwa typu mycia</label>
+                    <input id="wash_type_name" name="wash_type_name" type="text"/>
+                </div>
+                <div class="form-field">
+                    <label for="description">Opis</label>
+                    <textarea id="description" name="description">
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button class="my_link"
+                    type="submit">
+                    Dodaj typ mycia
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin/washtypes.js"></script>

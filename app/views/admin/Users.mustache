@@ -1,0 +1,53 @@
+{{> AdminMenu}}
+<div id="admin_content">
+    <a id="show_new_user_button" class="add-new" title="Nowy użytkownik"></a>
+    <table>
+        <thead>
+            <tr>
+                <th>Imię i nazwisko</th>
+                <th>Rola</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#users}}
+            <tr data-id="{{id}}" data-name="{{name}}">
+                <td>{{name}}</td>
+                <td>{{role}}</td>
+                <td><a class="remove" href="/admin/users/delete/{{id}}">Usuń</a></td>
+            </tr>
+        {{/users}}
+        </tbody>
+    </table>
+    <div id="new_user_modal" class="modal">
+        <form action="/admin/users" method="post" class="modal">
+            <div class="form-header">
+                <h3>Nowy Użytkownik</h3>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label for="username">Nazwa użytkownika</label>
+                    <input id="username" name="username" type="text"/>
+                </div>
+                <div class="form-field">
+                    <label for="password">Hasło</label>
+                    <input id="password" name="password" type="password"/>
+                </div>
+                <div class="form-field">
+                    <label for="user_role">Rola</label>
+                    <select id="user_role" name="user_role">
+                        <option value="admin">Admin</option>
+                        <option value="wash">Pracownik myjni</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button class="btn btn-primary"
+                    type="submit" onclick="modal.close();">
+                    Utwórz
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin/users.js"></script>
