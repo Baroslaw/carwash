@@ -48,6 +48,23 @@ class WashTypeModel {
         }
     }
 
+    static async UpdateWashType(id, order_number, name, description) {
+
+        try
+        {
+            var result = await global.DbExecute(
+                'UPDATE `wash_types` SET `order_number`=?, `name`=?, `description`=? WHERE `id`=?',
+                [order_number, name, description, id]
+            );
+            return result & result.affectedRows > 0;
+        }
+        catch(e)
+        {
+            console.log(e.message);
+            return false;
+        }
+    }
+
     static async DeleteWashTypeById(id) {
 
         var result = await global.DbExecute(

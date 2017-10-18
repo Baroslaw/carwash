@@ -250,3 +250,6 @@ form.modal {
 textarea {
     resize: none;
 }
+textarea#description {
+    height: 82px;
+}

@@ -11,10 +11,14 @@
         </thead>
         <tbody>
         {{#users}}
-            <tr data-id="{{id}}" data-name="{{name}}">
+            <tr data-id="{{id}}" data-name="{{name}}" data-role="{{role}}">
                 <td>{{name}}</td>
                 <td>{{role}}</td>
-                <td><a class="remove" href="/admin/users/delete/{{id}}">Usuń</a></td>
+                <td>
+                    <a href="/admin/users/history/{{id}}">Historia mycia</a>
+                    <a class="edit" href="/admin/users/update/{{id}}">Edytuj</a>
+                    <a class="remove" href="/admin/users/delete/{{id}}">Usuń</a>
+                </td>
             </tr>
         {{/users}}
         </tbody>
@@ -22,11 +26,11 @@
     <div id="new_user_modal" class="modal">
         <form action="/admin/users" method="post" class="modal">
             <div class="form-header">
-                <h3>Nowy Użytkownik</h3>
+                <h3>Użytkownik</h3>
             </div>
             <div class="form-body">
                 <div class="form-field">
-                    <label for="username">Nazwa użytkownika</label>
+                    <label for="username">Imię i nazwisko</label>
                     <input id="username" name="username" type="text"/>
                 </div>
                 <div class="form-field">
@@ -42,10 +46,7 @@
                 </div>
             </div>
             <div class="form-footer">
-                <button class="btn btn-primary"
-                    type="submit" onclick="modal.close();">
-                    Utwórz
-                </button>
+                <button type="submit">Utwórz</button>
             </div>
         </form>
     </div>

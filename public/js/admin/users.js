@@ -3,17 +3,30 @@ $(document).ready(function(){
     if (newUserItem.length > 0) {
         var newUserModal = new SotModal(newUserItem);
         
-        $('.content').on('click','#show_new_user_button',function(){
-            // var transitId = $(this).parents('tr').data('transit_id');
+        $('.content')
+        .on('click','#show_new_user_button',function(){
 
             newUserModal.showModal({
-                // "transit_id" : transitId
+                'action': "/admin/users",
+                'submitText': "Utwórz"
+            });
+        })
+        .on('click','a.edit', function(e){
+
+            e.preventDefault();
+            var tr = $(this).parents('tr');
+            newUserModal.showModal({
+                'id': tr.data('id'),
+                'username': tr.data('name'),
+                'user_role': tr.data('role'),
+                'action': $(this).attr('href'),
+                'submitText': "Modyfikuj"
             });
         });
         
         newUserItem.on("success", function(event, result){
             // updateTransitOnPage(result);
-        });    
+        });
     }
 
     $('.content').on('click', 'a.remove',function(event){

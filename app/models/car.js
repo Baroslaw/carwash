@@ -2,15 +2,24 @@
 
 class CarModel {
 
-    static async GetByRegNumberOrCreate(regNumber) {
+    static async GetByRegNumber(regNumber) {
 
         var result = await global.DbExecute(
-            'SELECT `id` FROM `cars` WHERE `reg_number` = ? ',
+            'SELECT * FROM `cars` WHERE `reg_number` = ? ',
              [regNumber]
         );
         
         if (result && result.length > 0) {
-            return result[0].id;
+            return result[0];
+        }
+        return null;
+    }
+
+    static async GetByRegNumberOrCreate(regNumber) {
+
+        var car = await this.GetByRegNumber(regNumber);
+        if (car != null) {
+            return car.id;
         }
 
         result = await global.DbExecute(

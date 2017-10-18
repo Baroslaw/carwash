@@ -108,7 +108,7 @@ async function OnSelectWashProgram(ctx) {
     // Save washing in history
     var WashHistoryModel = require('app/models/wash_history');
 
-    var historyEntryId = await WashHistoryModel.AddHistory(carId, washTypeId, null);
+    var historyEntryId = await WashHistoryModel.AddHistory(carId, washTypeId, null, ctx.session.user.id);
     if (historyEntryId < 0) {
         // TODO - error (throw something)
         var locals = {

@@ -1,0 +1,22 @@
+{{> AdminMenu}}
+<div id="admin_content">
+    <h2>Historia użytkownika {{#user}}{{name}}{{/user}}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Nr rej.</th>
+                <th>Mycie</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#washHistory}}
+            <tr>
+                <td>{{wash_datetime}}</td>
+                <td>{{reg_number}}</td>
+                <td>{{wash_name}}</td>
+            </tr>
+        {{/washHistory}}
+        </tbody>
+    </table>
+</div>

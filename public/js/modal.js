@@ -41,13 +41,23 @@ function SotModal(modal)
         if (params != null)
         {
             // Handle inputs
-            var inputs = form.find('input[type!=submit]');
+            var inputs = form.find(':input[type!=submit]');
             inputs.each(function() {
                 
                 var inputId = $(this).attr('name');
                 
                 $(this).val(params.hasOwnProperty(inputId) ? params[inputId] : '');
             });
+
+            if (params.hasOwnProperty('action')) {
+                form.attr('action', params['action']);
+            }
+            if (params.hasOwnProperty('submitText')) {
+                var submitButton = form.find('[type=submit]');
+                if (submitButton.length > 0) {
+                    $(submitButton).text(params['submitText']);
+                }
+            }
         }
         modal.show();
     }
@@ -58,16 +68,22 @@ function SotModal(modal)
     }
     
     form.on('submit', function(e){
-        // Prevent form submission
-        e.preventDefault();
 
         var form = $(e.target);
-        // var fv = $form.data('formValidation');
+
+        var method = form.attr('method');
+
+        if (method == 'get') {
+            return true;
+        }
+
+        // Prevent form submission
+        e.preventDefault();
 
         // Use Ajax to submit form data
         $.ajax({
             url: form.attr('action'),
-            type: 'POST',
+            type: form.attr('method'),
             data: form.serialize(),
             dataType: 'json',
             encode: true,

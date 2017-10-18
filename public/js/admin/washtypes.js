@@ -4,10 +4,22 @@ $(document).ready(function(){
         var modal = new SotModal(newWashTypeItem);
         
         $('.content').on('click','#show_new_wash_type_button',function(){
-            // var transitId = $(this).parents('tr').data('transit_id');
 
             modal.showModal({
-                // "transit_id" : transitId
+                'action': "/admin/wash_types",
+                'submitText': "Utwórz"
+            });
+        })
+        .on('click','a.edit',function(e){
+
+            e.preventDefault();
+            var tr = $(this).parents('tr');
+            modal.showModal({
+                'order_number': tr.data('order-number'),
+                'wash_type_name': tr.data('name'),
+                'description': tr.data('description'),
+                'action': $(this).attr('href'),
+                'submitText': 'Modyfikuj'
             });
         });
         

@@ -1,0 +1,46 @@
+{{> AdminMenu}}
+<div id="admin_content">
+    {{#message}}
+    <h3>{{message}}</h3>
+    {{/message}}
+    {{#hasCarHistory}}
+    <h3>Historia pojazdu {{reg_number}}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Typ mycia</th>
+                <th>Darmowe</th>
+                <th>Umył</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#carHistoryEntries}}
+                <tr>
+                    <td>{{date}}</td>
+                    <td>{{wash_type}}</td>
+                    <td>{{#is_free}}Darmowe{{/is_free}}</td>
+                    <td>{{washer_name}}</td>
+                </tr>
+            {{/carHistoryEntries}}
+        </tbody>
+    </table>
+    {{/hasCarHistory}}
+    <div id="car_history_modal" class="modal">
+        <form action="/admin/carhistory" method="get" class="modal">
+            <div class="form-header">
+                <h3>Historia pojazdu</h3>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label for="reg_number">Nr rejestracyjny</label>
+                    <input id="reg_number" name="reg_number" type="text" autofocus required/>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit">Pokaż historię</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin/carhistory.js"></script>

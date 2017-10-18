@@ -12,11 +12,14 @@
         </thead>
         <tbody>
         {{#washTypes}}
-            <tr data-id="{{id}}" data-name="{{name}}">
+            <tr data-id="{{id}}" data-order-number="{{order_number}}" data-name="{{name}}" data-description="{{description}}">
                 <td>{{order_number}}</td>
                 <td>{{name}}</td>
                 <td>{{description}}</td>
-                <td><a class="remove" href="/admin/washtypes/delete/{{id}}">Usuń</a></td>
+                <td>
+                    <a class="edit" href="/admin/washtypes/update/{{id}}">Edytuj</a>
+                    <a class="remove" href="/admin/washtypes/delete/{{id}}">Usuń</a>
+                </td>
             </tr>
         {{/washTypes}}
         </tbody>
