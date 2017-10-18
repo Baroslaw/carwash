@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "app-module-path": "^2.2.0",
+    "config": "^1.27.0",
     "jquery": "^3.2.1",
     "koa": "^2.3.0",
     "koa-body": "^2.3.0",

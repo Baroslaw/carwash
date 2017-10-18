@@ -11,32 +11,20 @@ const KoaBody = require('koa-body');
 const MySql = require('mysql2/promise');
 const Consolidate = require('consolidate');
 const SessionModule = require('koa-session');
+const ConfigModule = require('config');
 
 const app = new Koa();
 
-// TODO - take credentials from outher resources
 // Initialize DB
-const DbConfig = {
-    host: "localhost",
-    port: "3306",
-    user: "carwash",
-    password: "carwash",
-    database: "carwash"
-};
-
+const DbConfig = ConfigModule.get("DbConfig");
 const connectionPool = MySql.createPool(DbConfig);
 
 global.DbExecute = async (sql, params) => {
 
     try{
         var connection = await connectionPool.getConnection();
-        console.log("Connected to database");
-
         var result = await connection.execute(sql, params);
-        console.log(`Query ${sql} returned`);
-
         connection.release();
-        console.log("Connection released");
 
         return result[0];
     }

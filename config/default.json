@@ -1,0 +1,9 @@
+{
+    "DbConfig" : {
+        "host": "localhost",
+        "port": "3306",
+        "user": "carwash",
+        "password": "carwash",
+        "database": "carwash"
+    }
+}
