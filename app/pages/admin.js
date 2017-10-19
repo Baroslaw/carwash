@@ -9,7 +9,7 @@ adminRouter.get('/admin', MainAdminPage);
 adminRouter.get('/admin/users', UsersPage);
 adminRouter.post('/admin/users', NewUser);
 adminRouter.get('/admin/users/delete/:id', DeleteUser); // TODO - change to POST
-adminRouter.post('/admin/users/update/:id', UpdateUser); // TODO - change to POST
+adminRouter.post('/admin/users/update/:id', UpdateUser);
 adminRouter.get('/admin/users/history/:id', UserHistory);
 
 adminRouter.get('/admin/washtypes', WashTypesPage);
@@ -21,10 +21,7 @@ adminRouter.get('/admin/carhistory', CarHistory);
 
 async function MainAdminPage(ctx) {
 
-    // TODO - build view model upper
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/AdminMenu.mustache', {});
-
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 async function UsersPage(ctx) {
@@ -37,11 +34,7 @@ async function UsersPage(ctx) {
             "AdminMenu" : 'AdminMenu'
         }
     }
-    var viewModel = {
-        "user": ctx.session.user,
-        "content": await Consolidate.mustache('app/views/admin/Users.mustache', locals)
-    }
-    await ctx.render('MainView', viewModel);
+    ctx.viewModel.content = await Consolidate.mustache('app/views/admin/Users.mustache', locals);
 }
 
 async function NewUser(ctx) {
@@ -97,8 +90,6 @@ async function UserHistory(ctx) {
         }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/UserWashHistory.mustache', locals);
-
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 
@@ -114,7 +105,6 @@ async function WashTypesPage(ctx) {
     }
 
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/WashTypes.mustache', locals);
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 async function NewWashType(ctx) {
@@ -166,7 +156,7 @@ async function CarHistory(ctx) {
     
         var CarModel = require('app/models/car.js');
 
-        var regNumber = ctx.request.query.reg_number;
+        var regNumber = ctx.request.query.reg_number.toUpperCase();
         var car = await CarModel.GetByRegNumber(regNumber);
 
         if (car != null) {
@@ -183,7 +173,6 @@ async function CarHistory(ctx) {
         }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/CarWashHistory.mustache', locals);
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 module.exports = adminRouter.routes();

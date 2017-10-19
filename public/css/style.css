@@ -87,6 +87,9 @@ nav label {
 .main_form p {
     font-size: 24px;
 }
+input#reg_number {
+    text-transform: uppercase;
+}
 
 .main_form select {
     -webkit-appearance: none;

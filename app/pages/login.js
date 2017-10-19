@@ -11,17 +11,12 @@ preAuthRouter.post('/login', Authenticate);
 preAuthRouter.get('/logout', Logout);
 
 async function LoginForm(ctx) {
-    console.log("RegistationNumberForm");
     
     var UserModel = require('app/models/user.js');
     var locals = {
         "users": await UserModel.GetUsersNames()
     };
-    var viewModel = {
-        "content": await Consolidate.mustache('app/views/LoginForm.mustache', locals)
-    };
-
-    await ctx.render('MainView', viewModel);        
+    ctx.viewModel.content = await Consolidate.mustache('app/views/LoginForm.mustache', locals);
 }
 
 async function Authenticate(ctx) {

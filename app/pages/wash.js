@@ -40,8 +40,6 @@ async function RegistrationNumberForm(ctx) {
     else {
         ctx.viewModel.content = await Consolidate.mustache('app/views/RegistrationNumberForm.mustache', {});
     }
-
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 function WashCountToText(washCount, regNumber) {
@@ -99,7 +97,7 @@ async function OnSelectWashProgram(ctx) {
     }
     else {
         if ( ctx.request.body.free_wash != undefined ) {
-            var notUsedWashings = await WashHistoryModel.GetNotUsedWashings(carId);
+            var notUsedWashings = await WashHistoryModel.GetNotUsedWashings(CarObject.id);
             var notUsedIds = notUsedWashings.map(a => a.id);
             await WashHistoryModel.SetUsedWithIdToEntries(historyEntryId, notUsedIds);
         }
@@ -114,7 +112,6 @@ async function OnSelectWashProgram(ctx) {
         // And show Confirmation window
         ctx.viewModel.content = await Consolidate.mustache('app/views/ConfirmWashing.mustache', locals);
     }
-    await ctx.render('MainView', ctx.viewModel);
 }
 
 module.exports = router.routes();

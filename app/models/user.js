@@ -11,7 +11,6 @@ class UserModel {
         try {
             var hash = CryptoModule.createHash("SHA256");
             var digest = hash.update(password + passwordSalt).digest('hex');
-            console.log(`Digest ${digest} for password ${password}`);
             return digest;
         }
         catch(e) {

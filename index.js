@@ -52,10 +52,15 @@ app.use(Views(__dirname + '/app/views', {
     }
 }));
 
+// Static files provider
+app.use(KoaStatic(__dirname + '/public', { maxage: 1000*60*60 }));
+
 // All errors handling
 app.use(async (ctx, next) => {
     try {
+      ctx.viewModel = {};
       await next();
+      await ctx.render('MainView', ctx.viewModel);      
     } catch (err) {
       ctx.status = err.status || 500;
       var locals = {
@@ -63,16 +68,11 @@ app.use(async (ctx, next) => {
         "main_url": "/wash"
       }
       // Save failure
-      var viewModel = {
-          content: await Consolidate.mustache('app/views/Error.mustache', locals)
-      };
-      await ctx.render('MainView', viewModel);
+      ctx.viewModel.content = await Consolidate.mustache('app/views/Error.mustache', locals);
+      await ctx.render('MainView', ctx.viewModel);
       ctx.app.emit('error', err, ctx);
     }
 });
-
-// Static files provider
-app.use(KoaStatic(__dirname + '/public', { maxage: 1000*60*60 }));
 
 app.use(KoaBody());
 
@@ -84,9 +84,7 @@ app.use(async (ctx, next) =>{
         ctx.redirect('/login');
     }
     else {
-        ctx.viewModel = {
-            "user": ctx.session.user
-        }
+        ctx.viewModel.user = ctx.session.user;
         await next();
     }
 });
