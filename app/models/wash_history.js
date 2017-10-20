@@ -84,6 +84,7 @@ class WashHistoryModel {
                 "date": Moment(r.wash_datetime).format('YYYY-MM-DD HH:mm'),
                 "wash_type": r.name,
                 "is_free": r.id == r.used_with_id,
+                "is_used": r.used_with_id != null && r.id != r.used_with_id,
                 "washer_name": r.washer_name
             }));
         }

@@ -22,7 +22,7 @@ class CarModel {
             return car.id;
         }
 
-        result = await global.DbExecute(
+        var result = await global.DbExecute(
             'INSERT INTO `cars` (reg_number) VALUES (?)',
             [regNumber]
         );
