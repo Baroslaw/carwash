@@ -10,7 +10,6 @@ adminRouter.get('/admin/users', UsersPage);
 adminRouter.post('/admin/users', NewUser);
 adminRouter.get('/admin/users/delete/:id', DeleteUser); // TODO - change to POST
 adminRouter.post('/admin/users/update/:id', UpdateUser);
-adminRouter.get('/admin/users/history/:id', UserHistory);
 
 adminRouter.get('/admin/washtypes', WashTypesPage);
 adminRouter.post('/admin/washtypes', NewWashType);
@@ -18,6 +17,8 @@ adminRouter.post('/admin/washtypes/update/:id', UpdateWashType);
 adminRouter.get('/admin/washtypes/delete/:id', DeleteWashType);  // TODO - change to POST
 
 adminRouter.get('/admin/carhistory', CarHistory);
+
+adminRouter.get('/admin/userhistory', UserHistory);
 
 async function MainAdminPage(ctx) {
 
@@ -78,15 +79,27 @@ async function UpdateUser(ctx) {
 
 async function UserHistory(ctx) {
 
-    var id = ctx.params.id;
-    var WashHistoryModel = require('app/models/wash_history.js');
     var UserModel = require('app/models/user.js');
+    if ("user_id" in ctx.request.query) {
+        var id = ctx.request.query.user_id;
+        var date_from = ("date_from" in ctx.request.query) ? ctx.request.query.date_from : null;
+        var date_to = ("date_to" in ctx.request.query) ? ctx.request.query.date_to : null;
+        var WashHistoryModel = require('app/models/wash_history.js');
 
-    var locals = {
-        "washHistory": await WashHistoryModel.GetHistoryForUser(id),
-        "user": await UserModel.GetUserById(id),
-        "partials": {
-            "AdminMenu" : 'AdminMenu'
+        var locals = {
+            "washHistory": await WashHistoryModel.GetHistoryForUser(id, date_from, date_to),
+            "user": await UserModel.GetUserById(id),
+            "partials": {
+                "AdminMenu" : 'AdminMenu'
+            }
+        }
+    }
+    else {
+        var locals = {
+            "users": await UserModel.GetAllUsersData(),
+            "partials": {
+                "AdminMenu" : 'AdminMenu'
+            }
         }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/UserWashHistory.mustache', locals);

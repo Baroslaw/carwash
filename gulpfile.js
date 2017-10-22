@@ -27,6 +27,8 @@ gulp.task('libs', function(){
     .pipe(gulp.dest('public/libs/noty'));
     gulp.src(['node_modules/jquery/dist/**'])
     .pipe(gulp.dest('public/libs/jquery'));
+    gulp.src(['node_modules/@fengyuanchen/datepicker/dist/**'])
+    .pipe(gulp.dest('public/libs/datepicker'));
 });
 
 // gulp.task('img', function(){

@@ -59,3 +59,5 @@ typings/
 
 # Visual code settings
 .vscode
+
+public/libs/

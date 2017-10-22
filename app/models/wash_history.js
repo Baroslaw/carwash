@@ -53,11 +53,23 @@ class WashHistoryModel {
         );
     }
 
-    static async GetHistoryForUser(user_id) {
+    static async GetHistoryForUser(user_id, date_from, date_to) {
 
+        var query = 'SELECT `wash_datetime`, `reg_number`, `name` FROM `wash_history` JOIN `cars` ON `wash_history`.`car_id`=`cars`.`id` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` WHERE `person_id`=?'
+        var params = [user_id];
+
+        if (date_from != null && date_from != "") {
+            query += ' AND `wash_datetime`>=?';
+            params.push(date_from);
+        }
+        if (date_to != null && date_to != "") {
+            date_to = Moment(date_to).add(1,"days").format('YYYY-MM-DD');
+            query += ' AND `wash_datetime`<=?',
+            params.push(date_to);
+        }
+        query += ' ORDER BY `wash_datetime` DESC';
         var result = await global.DbExecute(
-            'SELECT `wash_datetime`, `reg_number`, `name` FROM `wash_history` JOIN `cars` ON `wash_history`.`car_id`=`cars`.`id` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` WHERE `person_id`=? ORDER BY `wash_datetime` DESC',
-            [user_id]
+            query, params
         );
 
         // TODO - convert date of retuned objects
