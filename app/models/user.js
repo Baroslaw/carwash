@@ -8,15 +8,9 @@ class UserModel {
 
     static HashedPassword(password) {
 
-        try {
-            var hash = CryptoModule.createHash("SHA256");
-            var digest = hash.update(password + passwordSalt).digest('hex');
-            return digest;
-        }
-        catch(e) {
-            console.log(e.message);
-            throw e;
-        }
+        var hash = CryptoModule.createHash("SHA256");
+        var digest = hash.update(password + passwordSalt).digest('hex');
+        return digest;
     }
 
     // Throws when user is not found
@@ -86,7 +80,7 @@ class UserModel {
         }
         catch(e)
         {
-            console.log(e.message);
+            global.Logger.error('CreateUser '+e.message);
             return false;
         }
     }

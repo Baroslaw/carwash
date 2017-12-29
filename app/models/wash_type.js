@@ -37,7 +37,7 @@ class WashTypeModel {
         }
         catch(e)
         {
-            console.log(e.message);
+            global.Logger.error('AddWashType '+e.message);
             return false;
         }
     }
@@ -54,7 +54,7 @@ class WashTypeModel {
         }
         catch(e)
         {
-            console.log(e.message);
+            gloabl.Logger.error('UpdateWashType ' + e.message);
             return false;
         }
     }

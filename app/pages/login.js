@@ -33,7 +33,7 @@ async function Authenticate(ctx) {
         }
     }
     catch(e) {
-        console.log(e.message);
+        global.Logger.error('Authenticate '+e.message);
         ctx.redirect('/login');
     }
 }

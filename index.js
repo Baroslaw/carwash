@@ -12,8 +12,19 @@ const MySql = require('mysql2/promise');
 const Consolidate = require('consolidate');
 const SessionModule = require('koa-session');
 const ConfigModule = require('config');
+const WinstonModule = require('winston');
+
+const Env = process.env.NODE_ENV || 'development';
 
 const app = new Koa();
+
+global.Logger = new (WinstonModule.Logger)({
+    level: Env === 'development' ? 'debug' : 'info',
+    transports: [
+        new WinstonModule.transports.Console(),
+        new WinstonModule.transports.File({filename: 'carwash.log'})
+    ]
+});
 
 // Initialize DB
 const DbConfig = ConfigModule.get("DbConfig");
@@ -31,7 +42,7 @@ global.DbExecute = async (sql, params) => {
     catch(e)
     {
         var message = `Error connection to database: ${e.message}`;
-        console.log(message);
+        global.Logger.error(message);
 
         const err = new Error(message);
         err.status = 500;
@@ -62,9 +73,10 @@ app.use(async (ctx, next) => {
       await next();
       await ctx.render('MainView', ctx.viewModel);      
     } catch (err) {
+      global.Logger.error(err.message);
       ctx.status = err.status || 500;
       var locals = {
-        "error": err.message,
+        "error": "Application error",
         "main_url": "/wash"
       }
       // Save failure

@@ -18,7 +18,7 @@ async function RegistrationNumberForm(ctx) {
         var CarModel = require('app/models/car');
     
         var carId = await CarModel.GetByRegNumberOrCreate(regNumber);
-        console.log(`Car of reg_number ${regNumber} id=${carId}`);
+        global.Logger.info(`Car of reg_number ${regNumber} id=${carId}`);
     
         var WashTypeModel = require('app/models/wash_type');
         
@@ -80,7 +80,7 @@ async function OnSelectWashProgram(ctx) {
 
     var CarObject = await CarModel.GetByRegNumber(carRegNumber);
 
-    console.log(`SelectWashProgram ${carRegNumber} WashType ${washTypeId}`);
+    global.Logger.info(`SelectWashProgram ${carRegNumber} WashType ${washTypeId}`);
 
     // Save washing in history
     var WashHistoryModel = require('app/models/wash_history');
