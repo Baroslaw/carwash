@@ -12,15 +12,20 @@
                 <th>Typ mycia</th>
                 <th>Darmowe</th>
                 <th>Umył</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
             {{#carHistoryEntries}}
-                <tr>
+                <tr data-name="{{date}}, {{wash_type}}, {{washer_name}}">
                     <td>{{date}}</td>
                     <td>{{wash_type}}</td>
                     <td>{{#is_free}}Darmowe{{/is_free}}{{#is_used}}Użyty{{/is_used}}</td>
                     <td>{{washer_name}}</td>
+                    <td>
+                        <a class="edit" href="/admin/carhistory/update/{{id}}">Edytuj</a>
+                        <a class="remove" href="/admin/carhistory/delete/{{id}}">Usuń</a>
+                    </td>
                 </tr>
             {{/carHistoryEntries}}
         </tbody>

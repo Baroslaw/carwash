@@ -17,6 +17,7 @@ adminRouter.post('/admin/washtypes/update/:id', UpdateWashType);
 adminRouter.get('/admin/washtypes/delete/:id', DeleteWashType);  // TODO - change to POST
 
 adminRouter.get('/admin/carhistory', CarHistory);
+adminRouter.get('/admin/carhistory/delete/:id', DeleteCarWashEntry);
 
 adminRouter.get('/admin/userhistory', UserHistory);
 
@@ -186,6 +187,24 @@ async function CarHistory(ctx) {
         }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/CarWashHistory.mustache', locals);
+}
+
+async function DeleteCarWashEntry(ctx) {
+
+    var id = ctx.params.id;
+
+    var WashHistoryDataAccess = require('app/data_access/wash_history.js');
+
+    var washEntry = await WashHistoryDataAccess.GetHistoryEntryById(id);
+
+    // TODO - check if entry was returned
+    var CarDataAccess = require('app/data_access/car.js');
+
+    var carData = await CarDataAccess.GetCarDataById(washEntry[0].car_id);
+
+    var result = await WashHistoryDataAccess.RemoveHistory(id);
+
+    ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
 }
 
 module.exports = adminRouter.routes();
