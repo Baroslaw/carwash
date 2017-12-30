@@ -27,7 +27,7 @@ async function MainAdminPage(ctx) {
 
 async function UsersPage(ctx) {
     
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
 
     var locals = {
         "users": await UserModel.GetAllUsersData(),
@@ -44,7 +44,7 @@ async function NewUser(ctx) {
     var user_role = ctx.request.body.user_role;
     var user_password = ctx.request.body.password;
 
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
 
     UserModel.CreateUser(user_name, user_role, user_password);
 
@@ -55,7 +55,7 @@ async function DeleteUser(ctx) {
 
     var id = ctx.params.id;
 
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
 
     // TODO - react on error/success
     await UserModel.DeleteUserById(id);
@@ -70,7 +70,7 @@ async function UpdateUser(ctx) {
     var user_role = ctx.request.body.user_role;
     var user_password = ctx.request.body.password;
 
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
 
     await UserModel.UpdateUser(id, user_name, user_role, user_password);
 
@@ -79,12 +79,12 @@ async function UpdateUser(ctx) {
 
 async function UserHistory(ctx) {
 
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
     if ("user_id" in ctx.request.query) {
         var id = ctx.request.query.user_id;
         var date_from = ("date_from" in ctx.request.query) ? ctx.request.query.date_from : null;
         var date_to = ("date_to" in ctx.request.query) ? ctx.request.query.date_to : null;
-        var WashHistoryModel = require('app/models/wash_history.js');
+        var WashHistoryModel = require('app/data_access/wash_history.js');
 
         var locals = {
             "washHistory": await WashHistoryModel.GetHistoryForUser(id, date_from, date_to),
@@ -108,7 +108,7 @@ async function UserHistory(ctx) {
 
 async function WashTypesPage(ctx) {
 
-    var WashTypeModel = require('app/models/wash_type.js');
+    var WashTypeModel = require('app/data_access/wash_type.js');
 
     var locals = {
         'washTypes': await WashTypeModel.GetWashTypes(),
@@ -126,7 +126,7 @@ async function NewWashType(ctx) {
     var name = ctx.request.body.wash_type_name;
     var description = ctx.request.body.description;
 
-    var WashTypeModel = require('app/models/wash_type.js');
+    var WashTypeModel = require('app/data_access/wash_type.js');
     
     await WashTypeModel.AddWashType(order_number, name, description);
 
@@ -140,7 +140,7 @@ async function UpdateWashType(ctx) {
     var name = ctx.request.body.wash_type_name;
     var description = ctx.request.body.description;
 
-    var WashTypeModel = require('app/models/wash_type.js');
+    var WashTypeModel = require('app/data_access/wash_type.js');
 
     await WashTypeModel.UpdateWashType(id, order_number, name, description);
 
@@ -151,7 +151,7 @@ async function DeleteWashType(ctx) {
 
     var id = ctx.params.id;
 
-    var WashTypeModel = require('app/models/wash_type.js');
+    var WashTypeModel = require('app/data_access/wash_type.js');
 
     await WashTypeModel.DeleteWashTypeById(id);
 
@@ -167,14 +167,14 @@ async function CarHistory(ctx) {
     }
     if ("reg_number" in ctx.request.query) {
     
-        var CarModel = require('app/models/car.js');
+        var CarModel = require('app/data_access/car.js');
 
         var regNumber = ctx.request.query.reg_number.toUpperCase();
         var car = await CarModel.GetByRegNumber(regNumber);
 
         if (car != null) {
 
-            var WashHistoryModel = require('app/models/wash_history.js');
+            var WashHistoryModel = require('app/data_access/wash_history.js');
         
             locals.carHistoryEntries = await WashHistoryModel.GetHistoryForCar(car.id);
             locals.hasCarHistory = true;

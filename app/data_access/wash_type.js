@@ -1,15 +1,15 @@
 'use strict';
 
-class WashTypeModel {
-    static async GetWashTypes() {
+module.exports = {
+    async GetWashTypes() {
 
         var result = await global.DbExecute(
             'SELECT * FROM `wash_types` WHERE `active` <> 0 ORDER BY `order_number`'
         );
         return result || [];
-    }
+    },
 
-    static async GetWashTypeById(id) {
+    async GetWashTypeById(id) {
 
         var result = await global.DbExecute(
             'SELECT * FROM `wash_types` WHERE `id` = ?',
@@ -22,9 +22,9 @@ class WashTypeModel {
         else {
             return null;
         }
-    }
+    },
 
-    static async AddWashType(order_number, name, description) {
+    async AddWashType(order_number, name, description) {
 
         try
         {
@@ -40,9 +40,9 @@ class WashTypeModel {
             global.Logger.error('AddWashType '+e.message);
             return false;
         }
-    }
+    },
 
-    static async UpdateWashType(id, order_number, name, description) {
+    async UpdateWashType(id, order_number, name, description) {
 
         try
         {
@@ -57,9 +57,9 @@ class WashTypeModel {
             gloabl.Logger.error('UpdateWashType ' + e.message);
             return false;
         }
-    }
+    },
 
-    static async DeleteWashTypeById(id) {
+    async DeleteWashTypeById(id) {
 
         var result = await global.DbExecute(
             'UPDATE `wash_types` SET `active`=0 WHERE `id`=?',
@@ -68,5 +68,3 @@ class WashTypeModel {
         return (result && result.affectedRows > 0);
     }
 }
-
-module.exports = WashTypeModel;

@@ -15,12 +15,12 @@ async function RegistrationNumberForm(ctx) {
     if ("reg_number" in ctx.request.query) {
 
         var regNumber = ctx.request.query.reg_number.toUpperCase();
-        var CarModel = require('app/models/car');
+        var CarModel = require('app/data_access/car');
     
         var carId = await CarModel.GetByRegNumberOrCreate(regNumber);
         global.Logger.info(`Car of reg_number ${regNumber} id=${carId}`);
     
-        var WashTypeModel = require('app/models/wash_type');
+        var WashTypeModel = require('app/data_access/wash_type');
         
         var washTypes = await WashTypeModel.GetWashTypes();
         var carData = await CarModel.GetCarDataById(carId);
@@ -76,14 +76,14 @@ async function OnSelectWashProgram(ctx) {
     var carRegNumber = ctx.request.body.reg_number;
     var washTypeId = ctx.request.body.wash_type;
 
-    var CarModel = require('app/models/car');
+    var CarModel = require('app/data_access/car');
 
     var CarObject = await CarModel.GetByRegNumber(carRegNumber);
 
     global.Logger.info(`SelectWashProgram ${carRegNumber} WashType ${washTypeId}`);
 
     // Save washing in history
-    var WashHistoryModel = require('app/models/wash_history');
+    var WashHistoryModel = require('app/data_access/wash_history');
 
     var historyEntryId = await WashHistoryModel.AddHistory(CarObject.id, washTypeId, null, ctx.session.user.id);
     if (historyEntryId < 0) {
@@ -102,7 +102,7 @@ async function OnSelectWashProgram(ctx) {
             await WashHistoryModel.SetUsedWithIdToEntries(historyEntryId, notUsedIds);
         }
         
-        var WashTypeModel = require('app/models/wash_type');
+        var WashTypeModel = require('app/data_access/wash_type');
         var washType = await WashTypeModel.GetWashTypeById(washTypeId)
         var locals = {
             "reg_number" : carRegNumber,

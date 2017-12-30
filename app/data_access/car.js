@@ -1,8 +1,8 @@
 'use strict';
 
-class CarModel {
+module.exports = {
 
-    static async GetByRegNumber(regNumber) {
+    async GetByRegNumber(regNumber) {
 
         var result = await global.DbExecute(
             'SELECT * FROM `cars` WHERE `reg_number` = ? ',
@@ -13,9 +13,9 @@ class CarModel {
             return result[0];
         }
         return null;
-    }
+    },
 
-    static async GetByRegNumberOrCreate(regNumber) {
+    async GetByRegNumberOrCreate(regNumber) {
 
         var car = await this.GetByRegNumber(regNumber);
         if (car != null) {
@@ -31,9 +31,9 @@ class CarModel {
             return result.insertId;
         }
         return null;
-    }
+    },
 
-    static async GetCarDataById(carId) {
+    async GetCarDataById(carId) {
 
         var result = await global.DbExecute(
             'SELECT * FROM `cars` WHERE `id` = ?',
@@ -52,5 +52,3 @@ class CarModel {
         return carResult;
     }
 }
-
-module.exports = CarModel;

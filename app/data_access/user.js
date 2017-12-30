@@ -4,17 +4,17 @@ const CryptoModule = require('crypto');
 
 const passwordSalt = 'Cr5aJNRt2ZfD51O';
 
-class UserModel {
+module.exports = {
 
-    static HashedPassword(password) {
+    HashedPassword(password) {
 
         var hash = CryptoModule.createHash("SHA256");
         var digest = hash.update(password + passwordSalt).digest('hex');
         return digest;
-    }
+    },
 
     // Throws when user is not found
-    static async GetUser(username, password) {
+    async GetUser(username, password) {
         
         var hashedPassword = this.HashedPassword(password);
 
@@ -34,9 +34,9 @@ class UserModel {
         }
 
         throw new Error("User not found");
-    }
+    },
 
-    static async GetUsersNames() {
+    async GetUsersNames() {
 
         var result = await global.DbExecute(
             'SELECT `name` FROM `users` WHERE `active` = 1'
@@ -46,9 +46,9 @@ class UserModel {
             return result.map(user => user.name);
         }
         return [];
-    }
+    },
 
-    static async GetAllUsersData() {
+    async GetAllUsersData() {
         
         var result = await global.DbExecute(
             'SELECT * FROM `users` WHERE `active` = 1'
@@ -57,9 +57,9 @@ class UserModel {
             return result;
         }
         return [];
-    }
+    },
 
-    static async DeleteUserById(id) {
+    async DeleteUserById(id) {
 
         var result = await global.DbExecute(
             'UPDATE `users` SET `active`=0 WHERE `id`=?',
@@ -67,9 +67,9 @@ class UserModel {
         );
 
         return (result && result.affectedRows > 0);
-    }
+    },
 
-    static async CreateUser(name, role, password) {
+    async CreateUser(name, role, password) {
 
         try{
             var result = await global.DbExecute(
@@ -83,9 +83,9 @@ class UserModel {
             global.Logger.error('CreateUser '+e.message);
             return false;
         }
-    }
+    },
 
-    static async UpdateUser(id, name, role, password) {
+    async UpdateUser(id, name, role, password) {
 
         var result;
 
@@ -101,9 +101,9 @@ class UserModel {
                 [name, role, this.HashedPassword(password), id]
             );
         }
-    }
+    },
 
-    static async GetUserById(id) {
+    async GetUserById(id) {
 
         var result = await global.DbExecute(
             'SELECT * FROM `users` WHERE `id`=?',
@@ -116,5 +116,3 @@ class UserModel {
         return null;
     }
 }
-
-module.exports = UserModel;

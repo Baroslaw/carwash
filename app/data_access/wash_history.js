@@ -2,10 +2,10 @@
 
 const Moment = require('moment');
 
-class WashHistoryModel {
+module.exports = {
 
     // TODO - add foreign keys constraints in database
-    static async AddHistory(carId, washProgramId, washingDateTime,personId) {
+    async AddHistory(carId, washProgramId, washingDateTime,personId) {
 
         if (!washingDateTime) {
             washingDateTime = Moment().format('YYYY-MM-DD HH:mm');
@@ -22,9 +22,9 @@ class WashHistoryModel {
         }
 
         return result.insertId;
-    }
+    },
 
-    static async GetNotUsedWashingCount(carId)
+    async GetNotUsedWashingCount(carId)
     {
         var notUsedWashings = await this.GetNotUsedWashings(carId);
 
@@ -33,9 +33,9 @@ class WashHistoryModel {
         }
         
         return notUsedWashings.length;
-    }
+    },
 
-    static async GetNotUsedWashings(carId)
+    async GetNotUsedWashings(carId)
     {
         var result = await global.DbExecute(
             'SELECT * FROM `wash_history` WHERE `car_id` = ? AND `used_with_id` IS NULL',
@@ -43,17 +43,17 @@ class WashHistoryModel {
         );
         
         return result;
-    }
+    },
 
-    static async SetUsedWithIdToEntries(used_with_id, idsArray) {
+    async SetUsedWithIdToEntries(used_with_id, idsArray) {
 
         var result = await global.DbExecute(
             'UPDATE `wash_history` SET `used_with_id` = ? WHERE `id` IN (' + idsArray.toString() +')',
             [used_with_id]
         );
-    }
+    },
 
-    static async GetHistoryForUser(user_id, date_from, date_to) {
+    async GetHistoryForUser(user_id, date_from, date_to) {
 
         var query = 'SELECT `wash_datetime`, `reg_number`, `name` FROM `wash_history` JOIN `cars` ON `wash_history`.`car_id`=`cars`.`id` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` WHERE `person_id`=?'
         var params = [user_id];
@@ -82,9 +82,9 @@ class WashHistoryModel {
         }
 
         return result;
-    }
+    },
 
-    static async GetHistoryForCar(car_id) {
+    async GetHistoryForCar(car_id) {
 
         var result = await global.DbExecute(
             'SELECT `wash_datetime`, `wash_types`.`name`, `wash_history`.`id`, `used_with_id`, `users`.`name` AS `washer_name` FROM `wash_history` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` LEFT JOIN `users` ON `wash_history`.`person_id`=`users`.`id` WHERE `car_id`=? ORDER BY `wash_datetime` DESC',
@@ -103,5 +103,3 @@ class WashHistoryModel {
         return result;
     }
 }
-
-module.exports = WashHistoryModel;

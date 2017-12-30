@@ -12,7 +12,7 @@ preAuthRouter.get('/logout', Logout);
 
 async function LoginForm(ctx) {
     
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
     var locals = {
         "users": await UserModel.GetUsersNames()
     };
@@ -20,7 +20,7 @@ async function LoginForm(ctx) {
 }
 
 async function Authenticate(ctx) {
-    var UserModel = require('app/models/user.js');
+    var UserModel = require('app/data_access/user.js');
 
     try {
         var user = await UserModel.GetUser(ctx.request.body.username, ctx.request.body.password);
