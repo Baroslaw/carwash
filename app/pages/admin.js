@@ -17,6 +17,7 @@ adminRouter.post('/admin/washtypes/update/:id', UpdateWashType);
 adminRouter.get('/admin/washtypes/delete/:id', DeleteWashType);  // TODO - change to POST
 
 adminRouter.get('/admin/carhistory', CarHistory);
+adminRouter.post('/admin/carhistory/update/:id', UpdateCarWashEntry);
 adminRouter.get('/admin/carhistory/delete/:id', DeleteCarWashEntry);
 
 adminRouter.get('/admin/userhistory', UserHistory);
@@ -180,6 +181,13 @@ async function CarHistory(ctx) {
             locals.carHistoryEntries = await WashHistoryModel.GetHistoryForCar(car.id);
             locals.hasCarHistory = true;
             locals.reg_number = regNumber;
+
+            // For Edit Wash entry modal form
+            var WashTypeModel = require('app/data_access/wash_type.js');
+            locals.wash_types = await WashTypeModel.GetWashTypes();
+
+            var UserModel = require('app/data_access/user.js');
+            locals.users = await UserModel.GetAllUsersData();
         }
         else {
 
@@ -203,6 +211,26 @@ async function DeleteCarWashEntry(ctx) {
     var carData = await CarDataAccess.GetCarDataById(washEntry[0].car_id);
 
     var result = await WashHistoryDataAccess.RemoveHistory(id);
+
+    ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
+}
+
+async function UpdateCarWashEntry(ctx) {
+
+    var id = ctx.params.id;
+    var date = ctx.request.body.date;
+    var wash_type_id = ctx.request.body.wash_type_id;
+    var washer_id = ctx.request.body.washer_id;
+
+    var WashHistoryDataAccess = require('app/data_access/wash_history.js');
+
+    var washEntry = await WashHistoryDataAccess.GetHistoryEntryById(id);
+
+    var CarDataAccess = require('app/data_access/car.js');
+
+    var carData = await CarDataAccess.GetCarDataById(washEntry[0].car_id);
+
+    var result = await WashHistoryDataAccess.UpdateHistoryEntryById(id, date, wash_type_id, washer_id);
 
     ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
 }

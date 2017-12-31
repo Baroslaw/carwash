@@ -102,11 +102,11 @@ function SotModal(modal)
     });
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
+    modal.on('click', function(event) {
         if (event.target == modal[0]) {
             self.hideModal();
         }
-    }
+    });
     
     modal.find(".modal-close").on('click', function(event) {
         self.hideModal();

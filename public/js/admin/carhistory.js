@@ -9,6 +9,13 @@ $(document).ready(function(){
         }
     }
 
+    var editHistoryEntryItem = $('#edit_wash_entry');
+    var editHistoryEntryModal;
+    if (editHistoryEntryItem.length > 0)
+    {
+        editHistoryEntryModal = new SotModal(editHistoryEntryItem);
+    }
+
     $('.content').on('click', 'a.remove',function(event){
 
         event.preventDefault();
@@ -27,5 +34,20 @@ $(document).ready(function(){
                 })
             ]
         }).show();
+    });
+
+    $('.content').on('click', 'a.edit',function(event){
+
+        event.preventDefault();
+
+        var tr = $(this).parents('tr');
+        var url = $(this).attr("href");
+
+        editHistoryEntryModal.showModal({
+            'date': tr.data('date'),
+            'wash_type_id': tr.data('wash_type_id'),
+            'washer_id': tr.data('washer_id'),
+            'action': url,
+        });
     });
 });

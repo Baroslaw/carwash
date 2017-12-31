@@ -87,7 +87,7 @@ module.exports = {
     async GetHistoryForCar(car_id) {
 
         var result = await global.DbExecute(
-            'SELECT `wash_datetime`, `wash_types`.`name`, `wash_history`.`id`, `used_with_id`, `users`.`name` AS `washer_name` FROM `wash_history` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` LEFT JOIN `users` ON `wash_history`.`person_id`=`users`.`id` WHERE `car_id`=? AND `wash_history`.`active` = 1 ORDER BY `wash_datetime` DESC',
+            'SELECT `wash_datetime`, `wash_types`.`name`, `wash_history`.`id`, `used_with_id`, `users`.`name` AS `washer_name`, `users`.`id` AS `washer_id`, `wash_types`.`id` AS `wash_type_id` FROM `wash_history` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` LEFT JOIN `users` ON `wash_history`.`person_id`=`users`.`id` WHERE `car_id`=? AND `wash_history`.`active` = 1 ORDER BY `wash_datetime` DESC',
             [car_id]
         );
 
@@ -96,9 +96,11 @@ module.exports = {
                 "id": r.id,
                 "date": Moment(r.wash_datetime).format('YYYY-MM-DD HH:mm'),
                 "wash_type": r.name,
+                "wash_type_id": r.wash_type_id,
                 "is_free": r.id == r.used_with_id,
                 "is_used": r.used_with_id != null && r.id != r.used_with_id,
-                "washer_name": r.washer_name
+                "washer_name": r.washer_name,
+                "washer_id": r.washer_id
             }));
         }
         return result;
@@ -106,11 +108,25 @@ module.exports = {
 
     async GetHistoryEntryById(id) {
 
+        global.Logger.debug('GetHistoryEntryById ' + id);
+
         var result = await global.DbExecute(
             'SELECT * FROM `wash_history` WHERE `id` = ?',
             [id]
         );
         return result;
+    },
+
+    async UpdateHistoryEntryById(id, date, wash_type_id, washer_id) {
+
+        global.Logger.debug('UpdateHistoryEntryById ' + id);
+        
+        var result = await global.DbExecute(
+            'UPDATE `wash_history` SET `wash_datetime` = ?, `wash_type_id` = ?, `person_id` = ? WHERE `id` = ?',
+            [date, wash_type_id, washer_id, id]
+        );
+
+        return (result && result.affectedRows > 0);
     },
 
     async RemoveHistory(id) {
