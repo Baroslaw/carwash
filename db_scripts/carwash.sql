@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Czas generowania: 20 Paź 2017, 22:58
+-- Czas generowania: 31 Gru 2017, 17:24
 -- Wersja serwera: 10.1.9-MariaDB
 -- Wersja PHP: 5.6.15
 
@@ -59,7 +59,8 @@ CREATE TABLE `wash_history` (
   `wash_type_id` bigint(20) NOT NULL,
   `wash_datetime` datetime NOT NULL,
   `person_id` bigint(20) NOT NULL,
-  `used_with_id` bigint(20) DEFAULT NULL
+  `used_with_id` bigint(20) DEFAULT NULL,
+  `active` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
