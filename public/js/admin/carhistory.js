@@ -42,12 +42,22 @@ $(document).ready(function(){
 
         var tr = $(this).parents('tr');
         var url = $(this).attr("href");
+        var table = $(this).parents('table');
 
         editHistoryEntryModal.showModal({
+            'reg_number': table.data('reg_number'),
             'date': tr.data('date'),
             'wash_type_id': tr.data('wash_type_id'),
             'washer_id': tr.data('washer_id'),
             'action': url,
+        });
+    });
+
+    $('.content').on('click','#show_new_history_entry_button',function(){
+
+        editHistoryEntryModal.showModal({
+            'action': "/admin/carhistory/create",
+            'submitText': "Utwórz"
         });
     });
 });

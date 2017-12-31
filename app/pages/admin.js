@@ -17,6 +17,7 @@ adminRouter.post('/admin/washtypes/update/:id', UpdateWashType);
 adminRouter.get('/admin/washtypes/delete/:id', DeleteWashType);  // TODO - change to POST
 
 adminRouter.get('/admin/carhistory', CarHistory);
+adminRouter.post('/admin/carhistory/create', CreateCarWashEntry);
 adminRouter.post('/admin/carhistory/update/:id', UpdateCarWashEntry);
 adminRouter.get('/admin/carhistory/delete/:id', DeleteCarWashEntry);
 
@@ -162,7 +163,13 @@ async function DeleteWashType(ctx) {
 
 async function CarHistory(ctx) {
 
+    // For Edit Wash entry modal form
+    var WashTypeModel = require('app/data_access/wash_type.js');
+    var UserModel = require('app/data_access/user.js');
+
     var locals = {
+        'wash_types': await WashTypeModel.GetWashTypes(),
+        'users': await UserModel.GetAllUsersData(),
         'partials': {
             "AdminMenu" : 'AdminMenu'
         }
@@ -181,13 +188,6 @@ async function CarHistory(ctx) {
             locals.carHistoryEntries = await WashHistoryModel.GetHistoryForCar(car.id);
             locals.hasCarHistory = true;
             locals.reg_number = regNumber;
-
-            // For Edit Wash entry modal form
-            var WashTypeModel = require('app/data_access/wash_type.js');
-            locals.wash_types = await WashTypeModel.GetWashTypes();
-
-            var UserModel = require('app/data_access/user.js');
-            locals.users = await UserModel.GetAllUsersData();
         }
         else {
 
@@ -233,6 +233,23 @@ async function UpdateCarWashEntry(ctx) {
     var result = await WashHistoryDataAccess.UpdateHistoryEntryById(id, date, wash_type_id, washer_id);
 
     ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
+}
+
+async function CreateCarWashEntry(ctx) {
+
+    var carRegNumber = ctx.request.body.reg_number;
+    var date = ctx.request.body.date;
+    var washTypeId = ctx.request.body.wash_type_id;
+    var washerId = ctx.request.body.washer_id;
+
+    var CarModel = require('app/data_access/car');
+    // TODO - function below returns only id while GetByRegNumber whole object - normalize functions
+    var CarId = await CarModel.GetByRegNumberOrCreate(carRegNumber);
+
+    var WashHistoryModel = require('app/data_access/wash_history');
+    var historyEntryId = await WashHistoryModel.AddHistory(CarId, washTypeId, date, washerId);
+
+    ctx.redirect('/admin/carhistory?reg_number=' + carRegNumber);
 }
 
 module.exports = adminRouter.routes();

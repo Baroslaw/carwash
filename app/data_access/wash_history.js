@@ -5,7 +5,7 @@ const Moment = require('moment');
 module.exports = {
 
     // TODO - add foreign keys constraints in database
-    async AddHistory(carId, washProgramId, washingDateTime,personId) {
+    async AddHistory(carId, washProgramId, washingDateTime, personId) {
 
         if (!washingDateTime) {
             washingDateTime = Moment().format('YYYY-MM-DD HH:mm');

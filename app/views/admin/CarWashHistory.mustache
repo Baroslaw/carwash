@@ -3,9 +3,10 @@
     {{#message}}
     <h3>{{message}}</h3>
     {{/message}}
+    <a id="show_new_history_entry_button" class="add-new" title="Nowy wpis historii mycia"></a>
     {{#hasCarHistory}}
     <h3>Historia pojazdu {{reg_number}}</h3>
-    <table>
+    <table data-reg_number="{{reg_number}}">
         <thead>
             <tr>
                 <th>Data</th>
@@ -53,6 +54,10 @@
                 <h3>Edycja wpisu</h3>
             </div>
             <div class="form-body">
+                <div class="form-field">
+                    <label for="reg_number">Nr rejestracyjny</label>
+                    <input type="text" id="reg_number" name="reg_number"/>
+                </div>
                 <div class="form-field">
                     <label for="date">Data</label>
                     <input type="text" id="date" name="date" class="daypicker"/>
