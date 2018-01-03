@@ -237,7 +237,7 @@ async function UpdateCarWashEntry(ctx) {
 
 async function CreateCarWashEntry(ctx) {
 
-    var carRegNumber = ctx.request.body.reg_number;
+    var carRegNumber = ctx.request.body.reg_number.toUpperCase();
     var date = ctx.request.body.date;
     var washTypeId = ctx.request.body.wash_type_id;
     var washerId = ctx.request.body.washer_id;

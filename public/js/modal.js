@@ -73,7 +73,9 @@ function SotModal(modal)
 
         var method = form.attr('method');
 
-        if (method == 'get') {
+        var useAjax = form.data('ajax');
+
+        if (!useAjax) {
             return true;
         }
 
