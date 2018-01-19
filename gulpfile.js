@@ -31,6 +31,18 @@ gulp.task('libs', function(){
     .pipe(gulp.dest('public/libs/datepicker'));
 });
 
+gulp.task('autoprefixer', function () {
+    var postcss      = require('gulp-postcss');
+    var sourcemaps   = require('gulp-sourcemaps');
+    var autoprefixer = require('autoprefixer');
+ 
+    return gulp.src('app/css/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(postcss([ autoprefixer() ]))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('public/css'));
+});
+
 // gulp.task('img', function(){
 //     gulp.src([
 //         'app/assets/images/*.*'
