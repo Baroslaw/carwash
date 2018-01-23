@@ -158,9 +158,17 @@ input[type="submit"], .main_form a {
     background-color: #fff;
     display: inline-block;
 }
+.actions_field {
+    position: relative;
+}
 .actions_field input[type="submit"] {
     width: 200px;
     margin: 0 20px;
+}
+.actions_field #show_history_modal_button {
+    position: absolute;
+    left: 30px;
+    padding: 0 10px;
 }
 input[type="submit"]:disabled {
     color: #d5d5d5;
@@ -248,4 +256,7 @@ textarea {
 }
 textarea#description {
     height: 82px;
+}
+.small_link {
+    text-decoration: none;
 }

@@ -170,8 +170,10 @@ async function CarHistory(ctx) {
     var locals = {
         'wash_types': await WashTypeModel.GetWashTypes(),
         'users': await UserModel.GetAllUsersData(),
+        'user': ctx.session.user,
         'partials': {
-            "AdminMenu" : 'AdminMenu'
+            "AdminMenu" : 'AdminMenu',
+            "CarWashHistoryTable": 'CarWashHistoryTable'
         }
     }
     if ("reg_number" in ctx.request.query) {
@@ -186,6 +188,7 @@ async function CarHistory(ctx) {
             var WashHistoryModel = require('app/data_access/wash_history.js');
         
             locals.carHistoryEntries = await WashHistoryModel.GetHistoryForCar(car.id);
+            locals.fullHistory = true,
             locals.hasCarHistory = true;
             locals.reg_number = regNumber;
         }

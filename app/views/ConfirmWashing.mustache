@@ -1,6 +1,10 @@
 <div class="main_form">
-    <label>Mycie {{reg_number}} w toku. {{wash_type_text}}</label>
+    <label>Mycie {{reg_number}} w toku.</label>
+    <label>{{wash_type_text}}</label>
+    {{#isNextFree}}
+    <label class="green_indication">Kolejne mycie darmowe</label>
+    {{/isNextFree}}
     <div class="actions_field">
-        <a href="{{main_url}}" class="my_link">Kolejne mycie</a>
+        <a href="{{main_url}}" class="my_link">Następny pojazd</a>
     </div>
 </div>

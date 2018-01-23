@@ -7,6 +7,10 @@ const FREE_WASHING_COUNT = 10;
 
 const router = new KoaRouter();
 
+// TODO - define all data_access requires here
+const WashHistoryDataAccess = require('app/data_access/wash_history.js');
+const CarDataAccess = require('app/data_access/car');
+
 router.get('/wash', RegistrationNumberForm);
 router.post('/wash', OnSelectWashProgram);
 
@@ -15,24 +19,32 @@ async function RegistrationNumberForm(ctx) {
     if ("reg_number" in ctx.request.query) {
 
         var regNumber = ctx.request.query.reg_number.toUpperCase();
-        var CarModel = require('app/data_access/car');
     
-        var carId = await CarModel.GetByRegNumberOrCreate(regNumber);
+        var carId = await CarDataAccess.GetByRegNumberOrCreate(regNumber);
         global.Logger.info(`Car of reg_number ${regNumber} id=${carId}`);
     
         var WashTypeModel = require('app/data_access/wash_type');
         
         var washTypes = await WashTypeModel.GetWashTypes();
-        var carData = await CarModel.GetCarDataById(carId);
+        var carData = await CarDataAccess.GetCarDataById(carId);
     
         var thisWashCount = carData.notUsedWashingCount + 1;
+
+        var notUsedHistory = await WashHistoryDataAccess.GetNotUsedHistoryForCar(carId);
         
         var locals = {
             "reg_number": carData.reg_number,
             "wash_types" : washTypes,
             "id": ctx.params.id,
             "washingCountText": WashCountToText(thisWashCount, carData.reg_number),
-            "isFreeWash": (thisWashCount >= FREE_WASHING_COUNT)
+            "isFreeWash": (thisWashCount >= FREE_WASHING_COUNT),
+            "carHistoryEntries": notUsedHistory,
+            "hasCarHistory": notUsedHistory.length > 0,
+            "fullHistory": false,
+            "user": ctx.session.user,
+            "partials" : {
+                "CarWashHistoryTable": 'admin/CarWashHistoryTable'
+            }
         };
     
         ctx.viewModel.content = await Consolidate.mustache('app/views/SelectWashingProgram.mustache', locals);
@@ -53,16 +65,16 @@ function WashCountToText(washCount, regNumber) {
     }
 
     if (countRemainder == 1) {
-        countText = `sze`;
+        countText = `-sze`;
     }
     else if (countRemainder == 2) {
-        countText = `gie`;
+        countText = `-gie`;
     }
     else if (countRemainder == 3) {
-        countText =`cie`;
+        countText =`-cie`;
     }
     else {
-        countText = `te`
+        countText = `-te`
     }
     return `${washCount}${countText} mycie pojazdu ${regNumber}`;
 }
@@ -76,9 +88,7 @@ async function OnSelectWashProgram(ctx) {
     var carRegNumber = ctx.request.body.reg_number;
     var washTypeId = ctx.request.body.wash_type;
 
-    var CarModel = require('app/data_access/car');
-
-    var CarObject = await CarModel.GetByRegNumber(carRegNumber);
+    var CarObject = await CarDataAccess.GetByRegNumber(carRegNumber);
 
     global.Logger.info(`SelectWashProgram ${carRegNumber} WashType ${washTypeId}`);
 
@@ -96,18 +106,22 @@ async function OnSelectWashProgram(ctx) {
         ctx.viewModel.content = await Consolidate.mustache('app/views/WashingError.mustache', locals);
     }
     else {
+        var notUsedWashings = await WashHistoryModel.GetNotUsedWashings(CarObject.id);
+        var notUsedWashingCount = notUsedWashings.length;
+
         if ( ctx.request.body.free_wash != undefined ) {
-            var notUsedWashings = await WashHistoryModel.GetNotUsedWashings(CarObject.id);
             var notUsedIds = notUsedWashings.map(a => a.id);
             await WashHistoryModel.SetUsedWithIdToEntries(historyEntryId, notUsedIds);
+            notUsedWashingCount = 0;
         }
-        
+
         var WashTypeModel = require('app/data_access/wash_type');
         var washType = await WashTypeModel.GetWashTypeById(washTypeId)
         var locals = {
             "reg_number" : carRegNumber,
             "wash_type_text": washType.name,
-            "main_url": "/wash"
+            "main_url": "/wash",
+            "isNextFree": notUsedWashingCount == (FREE_WASHING_COUNT - 1)
         };
         // And show Confirmation window
         ctx.viewModel.content = await Consolidate.mustache('app/views/ConfirmWashing.mustache', locals);

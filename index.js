@@ -104,7 +104,6 @@ app.use(async (ctx, next) =>{
 app.use(require('app/pages/wash.js'));
 
 // Administration pages
-// TODO - move this middleware to app/pages/admin.js
 app.use(async (ctx, next) => {
     if (ctx.session.user.role != "admin") {
         ctx.redirect('/wash');

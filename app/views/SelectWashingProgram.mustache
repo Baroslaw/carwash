@@ -14,7 +14,21 @@
     {{/wash_types}}
   </div>
   <div class="actions_field">
+    {{#hasCarHistory}}
+      <a href="" id="show_history_modal_button" title="Historia mycia"><img src="/images/wash_history.png" alt="Historia mycia"/></a>
+    {{/hasCarHistory}}
     <input id="submit_select_wash" type="submit" class="my_link" name="submit_select_wash" value="Wybierz" disabled="disabled"/>
     <input type="submit" class="my_link" name="submit_cancel_wash" value="Anuluj"/>
   </div>
 </form>
+{{#hasCarHistory}}
+<div id="car_history_modal" class="modal">
+  <form class="modal">
+    <div class="form-header">
+        <h3>Historia pojazdu {{reg_number}}</h3>
+    </div>
+    {{>CarWashHistoryTable}}
+  </form>
+</div>
+{{/hasCarHistory}}
+<script src="/js/selectwashingprogram.js"></script>

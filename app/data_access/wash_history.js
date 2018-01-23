@@ -84,6 +84,26 @@ module.exports = {
         return result;
     },
 
+    async GetNotUsedHistoryForCar(car_id)
+    {
+        var result = await global.DbExecute(
+            'SELECT `wash_datetime`, `wash_types`.`name`, `wash_history`.`id`, `used_with_id`, `users`.`name` AS `washer_name`, `users`.`id` AS `washer_id`, `wash_types`.`id` AS `wash_type_id` FROM `wash_history` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` LEFT JOIN `users` ON `wash_history`.`person_id`=`users`.`id` WHERE `car_id`=? AND `wash_history`.`active` = 1 AND ISNULL(`wash_history`.`used_with_id`) ORDER BY `wash_datetime` DESC',
+            [car_id]
+        );
+
+        if (result.length > 0) {
+            return result.map( r => ({
+                "id": r.id,
+                "date": Moment(r.wash_datetime).format('YYYY-MM-DD HH:mm'),
+                "wash_type": r.name,
+                "wash_type_id": r.wash_type_id,
+                "washer_name": r.washer_name,
+                "washer_id": r.washer_id
+            }));
+        }
+        return result;
+    },
+
     async GetHistoryForCar(car_id) {
 
         var result = await global.DbExecute(

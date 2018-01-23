@@ -5,32 +5,8 @@
     {{/message}}
     <a id="show_new_history_entry_button" class="add-new" title="Nowy wpis historii mycia"></a>
     {{#hasCarHistory}}
-    <h3>Historia pojazdu {{reg_number}}</h3>
-    <table data-reg_number="{{reg_number}}">
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Typ mycia</th>
-                <th>Darmowe</th>
-                <th>Umył</th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#carHistoryEntries}}
-                <tr data-name="{{date}}, {{wash_type}}, {{washer_name}}" data-date="{{date}}" data-wash_type_id="{{wash_type_id}}" data-washer_id="{{washer_id}}">
-                    <td>{{date}}</td>
-                    <td>{{wash_type}}</td>
-                    <td>{{#is_free}}Darmowe{{/is_free}}{{#is_used}}Użyty{{/is_used}}</td>
-                    <td>{{washer_name}}</td>
-                    <td>
-                        <a class="edit" href="/admin/carhistory/update/{{id}}">Edytuj</a>
-                        <a class="remove" href="/admin/carhistory/delete/{{id}}">Usuń</a>
-                    </td>
-                </tr>
-            {{/carHistoryEntries}}
-        </tbody>
-    </table>
+        <h3>Historia pojazdu {{reg_number}}</h3>
+        {{> CarWashHistoryTable}}
     {{/hasCarHistory}}
     <div id="car_history_modal" class="modal">
         <form action="/admin/carhistory" method="get" class="modal">
