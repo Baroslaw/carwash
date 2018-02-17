@@ -65,7 +65,7 @@ $(document).ready(function(){
     $('.content').on('click','#show_new_history_entry_button',function(){
 
         editHistoryEntryModal.showModal({
-            'action': "/admin/carhistory/create",
+            'action': "/admin/history/create",
             'submitText': "Utwórz"
         });
     });

@@ -6,7 +6,7 @@ $(document).ready(function(){
         $('.content').on('click','#show_new_wash_type_button',function(){
 
             modal.showModal({
-                'action': "/admin/wash_types",
+                'action': "/admin/washtypes",
                 'submitText': "Utwórz"
             });
         })

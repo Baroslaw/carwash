@@ -3,6 +3,8 @@
 const KoaRouter = require('koa-router');
 const Consolidate = require('consolidate');
 
+var UserDataAccess = require('app/data_access/user.js');
+
 const preAuthRouter = new KoaRouter();
 
 // Routing 
@@ -12,18 +14,16 @@ preAuthRouter.get('/logout', Logout);
 
 async function LoginForm(ctx) {
     
-    var UserModel = require('app/data_access/user.js');
     var locals = {
-        "users": await UserModel.GetUsersNames()
+        "users": await UserDataAccess.GetUsersNames()
     };
     ctx.viewModel.content = await Consolidate.mustache('app/views/LoginForm.mustache', locals);
 }
 
 async function Authenticate(ctx) {
-    var UserModel = require('app/data_access/user.js');
 
     try {
-        var user = await UserModel.GetUser(ctx.request.body.username, ctx.request.body.password);
+        var user = await UserDataAccess.GetUser(ctx.request.body.username, ctx.request.body.password);
         ctx.session.user = user;
         if (user.isAdmin) {
             ctx.redirect('/admin');
@@ -33,7 +33,7 @@ async function Authenticate(ctx) {
         }
     }
     catch(e) {
-        global.Logger.error('Authenticate '+e.message);
+        global.Logger.error('Authenticate ' + e.message);
         ctx.redirect('/login');
     }
 }

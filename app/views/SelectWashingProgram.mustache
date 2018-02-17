@@ -6,7 +6,7 @@
     <label class="green_indication">Darmowe</label>
   {{/isFreeWash}}
   {{#isFast}}
-    <label class="red_indication">Samochód myty {{lastWashDurationHours}} godzin temu!</label>
+    <label class="red_indication">Samochód myty {{lastWashDurationHours}}h temu!</label>
   {{/isFast}}
   <div id="wash_types">
     {{#wash_types}}
@@ -34,4 +34,4 @@
   </form>
 </div>
 {{/hasCarHistory}}
-<script src="/js/selectwashingprogram.js"></script>
+<script src="/js/selectwashingprogram.js?v=1"></script>

@@ -8,7 +8,6 @@ const FREE_WASHING_COUNT = 10;
 
 const router = new KoaRouter();
 
-// TODO - define all data_access requires here
 const WashHistoryDataAccess = require('app/data_access/wash_history');
 const CarDataAccess = require('app/data_access/car');
 const WashTypeDataAccess = require('app/data_access/wash_type');
@@ -101,26 +100,23 @@ async function OnSelectWashProgram(ctx) {
 
     global.Logger.info(`SelectWashProgram ${carRegNumber} WashType ${washTypeId}`);
 
-    // Save washing in history
-    var WashHistoryModel = require('app/data_access/wash_history');
-
-    var historyEntryId = await WashHistoryModel.AddHistory(CarObject.id, washTypeId, null, ctx.session.user.id);
+    var historyEntryId = await WashHistoryDataAccess.AddHistory(CarObject.id, washTypeId, null, ctx.session.user.id);
     if (historyEntryId < 0) {
+        // Save failure
         // TODO - error (throw something)
         var locals = {
             "error": "Błąd rejestracji mycia samochodu",
             "main_url": "/wash"
         }
-        // Save failure
         ctx.viewModel.content = await Consolidate.mustache('app/views/WashingError.mustache', locals);
     }
     else {
-        var notUsedWashings = await WashHistoryModel.GetNotUsedWashings(CarObject.id);
+        var notUsedWashings = await WashHistoryDataAccess.GetNotUsedWashings(CarObject.id);
         var notUsedWashingCount = notUsedWashings.length;
 
         if ( ctx.request.body.free_wash != undefined ) {
             var notUsedIds = notUsedWashings.map(a => a.id);
-            await WashHistoryModel.SetUsedWithIdToEntries(historyEntryId, notUsedIds);
+            await WashHistoryDataAccess.SetUsedWithIdToEntries(historyEntryId, notUsedIds);
             notUsedWashingCount = 0;
         }
 

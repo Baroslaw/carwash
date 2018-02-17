@@ -53,37 +53,6 @@ module.exports = {
         );
     },
 
-    async GetHistoryForUser(user_id, date_from, date_to) {
-
-        var query = 'SELECT `wash_datetime`, `reg_number`, `name` FROM `wash_history` JOIN `cars` ON `wash_history`.`car_id`=`cars`.`id` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` WHERE `person_id`=? AND `wash_history`.`active` = 1'
-        var params = [user_id];
-
-        if (date_from != null && date_from != "") {
-            query += ' AND `wash_datetime`>=?';
-            params.push(date_from);
-        }
-        if (date_to != null && date_to != "") {
-            date_to = Moment(date_to).add(1,"days").format('YYYY-MM-DD');
-            query += ' AND `wash_datetime`<=?',
-            params.push(date_to);
-        }
-        query += ' ORDER BY `wash_datetime` DESC';
-        var result = await global.DbExecute(
-            query, params
-        );
-
-        // TODO - convert date of retuned objects
-        if (result.length > 0) {
-            return result.map( r => ({
-                "wash_datetime": Moment(r.wash_datetime).format('YYYY-MM-DD HH:mm'),
-                "reg_number": r.reg_number,
-                "wash_name": r.name
-            }));
-        }
-
-        return result;
-    },
-
     async GetNotUsedHistoryForCar(car_id)
     {
         var result = await global.DbExecute(
@@ -117,28 +86,6 @@ module.exports = {
         return null;
     },
 
-    async GetHistoryForCar(car_id) {
-
-        var result = await global.DbExecute(
-            'SELECT `wash_datetime`, `wash_types`.`name`, `wash_history`.`id`, `used_with_id`, `users`.`name` AS `washer_name`, `users`.`id` AS `washer_id`, `wash_types`.`id` AS `wash_type_id` FROM `wash_history` JOIN `wash_types` ON `wash_history`.`wash_type_id`=`wash_types`.`id` LEFT JOIN `users` ON `wash_history`.`person_id`=`users`.`id` WHERE `car_id`=? AND `wash_history`.`active` = 1 ORDER BY `wash_datetime` DESC',
-            [car_id]
-        );
-
-        if (result.length > 0) {
-            return result.map( r => ({
-                "id": r.id,
-                "date": Moment(r.wash_datetime).format('YYYY-MM-DD HH:mm'),
-                "wash_type": r.name,
-                "wash_type_id": r.wash_type_id,
-                "is_free": r.id == r.used_with_id,
-                "is_used": r.used_with_id != null && r.id != r.used_with_id,
-                "washer_name": r.washer_name,
-                "washer_id": r.washer_id
-            }));
-        }
-        return result;
-    },
-
     async GetHistory(options) {
 
         var query = 'SELECT \
@@ -155,7 +102,7 @@ module.exports = {
                 (\
                     SELECT MAX(wh2.wash_datetime) \
                     FROM wash_history wh2 \
-                    WHERE wh1.car_id=wh2.car_id AND wh2.wash_datetime < wh1.wash_datetime\
+                    WHERE wh2.active=1 AND wh1.car_id=wh2.car_id AND wh2.wash_datetime < wh1.wash_datetime\
                 ), \
                 wash_datetime) as delta \
         FROM wash_history wh1 \
@@ -164,7 +111,7 @@ module.exports = {
         LEFT JOIN users ON wh1.person_id=users.id';
 
         var params = [];
-        var whereClause = '';
+        var whereClause = ' wh1.active=1';
 
         if (options.date_from)
         {
@@ -232,7 +179,7 @@ module.exports = {
         global.Logger.debug('UpdateHistoryEntryById ' + id);
         
         var result = await global.DbExecute(
-            'UPDATE `wash_history` SET `wash_datetime` = ?, `wash_type_id` = ?, `person_id` = ? WHERE `id` = ?',
+            'UPDATE `wash_history` SET `wash_datetime` = ?, `wash_type_id` = ?, `person_id` = ? WHERE `active=` AND `id` = ?',
             [date, wash_type_id, washer_id, id]
         );
 
