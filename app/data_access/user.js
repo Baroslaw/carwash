@@ -59,6 +59,25 @@ module.exports = {
         return [];
     },
 
+    async GetAllUsersIdAndNames(addEmptyUser) {
+
+        var users = await this.GetAllUsersData();
+
+        var result = users.map(r => ({
+            "id": r.id,
+            "name": r.name
+        }));
+
+        if (addEmptyUser) {
+            result.unshift({
+                "id": "",
+                "name": ""
+            });
+        }
+
+        return result;
+    },
+
     async DeleteUserById(id) {
 
         var result = await global.DbExecute(

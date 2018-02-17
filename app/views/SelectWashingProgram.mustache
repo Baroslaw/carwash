@@ -5,6 +5,9 @@
     <input type="hidden" name="free_wash" value="1" />
     <label class="green_indication">Darmowe</label>
   {{/isFreeWash}}
+  {{#isFast}}
+    <label class="red_indication">Samochód myty {{lastWashDurationHours}} godzin temu!</label>
+  {{/isFast}}
   <div id="wash_types">
     {{#wash_types}}
       <label class="noselect" for="wash_type_{{order_number}}">{{order_number}}
@@ -17,8 +20,8 @@
     {{#hasCarHistory}}
       <a href="" id="show_history_modal_button" title="Historia mycia"><img src="/images/wash_history.png" alt="Historia mycia"/></a>
     {{/hasCarHistory}}
-    <input id="submit_select_wash" type="submit" class="my_link" name="submit_select_wash" value="Wybierz" disabled="disabled"/>
-    <input type="submit" class="my_link" name="submit_cancel_wash" value="Anuluj"/>
+    <input id="submit_select_wash" type="submit" name="submit_select_wash" value="Wybierz" disabled="disabled"/>
+    <input type="submit" name="submit_cancel_wash" value="Anuluj"/>
   </div>
 </form>
 {{#hasCarHistory}}

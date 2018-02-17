@@ -45,9 +45,10 @@ module.exports = {
         }
 
         var carResult = result[0];
-        var WashHistoryModel = require('./wash_history');
+        var WashHistoryDataAccess = require('app/data_access/wash_history');
 
-        carResult.notUsedWashingCount = await WashHistoryModel.GetNotUsedWashingCount(carId);
+        carResult.notUsedWashingCount = await WashHistoryDataAccess.GetNotUsedWashingCount(carId);
+        carResult.lastWashDate = await WashHistoryDataAccess.GetLastCarWashDate(carId);
 
         return carResult;
     }

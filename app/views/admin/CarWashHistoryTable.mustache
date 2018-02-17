@@ -2,9 +2,12 @@
     <thead>
         <tr>
             <th>Data</th>
+            {{#fullHistory}}
+            <th>Nr rej.</th>
+            {{/fullHistory}}
             <th>Typ mycia</th>
             {{#fullHistory}}
-            <th>Darmowe</th>
+            <th>Uwagi</th>
             {{/fullHistory}}
             <th>Umył</th>
             {{#user.isAdmin}}
@@ -13,12 +16,15 @@
         </tr>
     </thead>
     <tbody>
-        {{#carHistoryEntries}}
-            <tr data-name="{{date}}, {{wash_type}}, {{washer_name}}" data-date="{{date}}" data-wash_type_id="{{wash_type_id}}" data-washer_id="{{washer_id}}">
+        {{#historyEntries}}
+            <tr class="{{#is_fast}}fast{{/is_fast}}" data-name="{{date}}, {{reg_number}}, {{wash_type}}, {{washer_name}}" data-date="{{date}}" data-reg_number="{{reg_number}}" data-wash_type_id="{{wash_type_id}}" data-washer_id="{{washer_id}}">
                 <td>{{date}}</td>
+                {{#fullHistory}}
+                <td>{{reg_number}}</td>
+                {{/fullHistory}}
                 <td>{{wash_type}}</td>
                 {{#fullHistory}}
-                <td>{{#is_free}}Darmowe{{/is_free}}{{#is_used}}Użyty{{/is_used}}</td>
+                <td class="attrs">{{#is_free}}<div class="icon free"></div>{{/is_free}}{{#is_used}}<div class="icon used"></div>{{/is_used}}{{#is_fast}}<div class="icon fast"></div>{{/is_fast}}</td>
                 {{/fullHistory}}
                 <td>{{washer_name}}</td>
                 {{#user.isAdmin}}
@@ -28,6 +34,6 @@
                 </td>
                 {{/user.isAdmin}}
             </tr>
-        {{/carHistoryEntries}}
+        {{/historyEntries}}
     </tbody>
 </table>

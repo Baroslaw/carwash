@@ -5,6 +5,11 @@ const Consolidate = require('consolidate');
 
 const adminRouter = new KoaRouter();
 
+const WashTypeDataAccess = require('app/data_access/wash_type.js');
+const UserDataAccess = require('app/data_access/user.js');
+const CarDataAccess = require('app/data_access/car.js');
+const WashHistoryDataAccess = require('app/data_access/wash_history.js');
+
 adminRouter.get('/admin', MainAdminPage);
 adminRouter.get('/admin/users', UsersPage);
 adminRouter.post('/admin/users', NewUser);
@@ -22,6 +27,9 @@ adminRouter.post('/admin/carhistory/update/:id', UpdateCarWashEntry);
 adminRouter.get('/admin/carhistory/delete/:id', DeleteCarWashEntry);
 
 adminRouter.get('/admin/userhistory', UserHistory);
+
+adminRouter.get('/admin/history', ShowWashHistory);
+
 
 async function MainAdminPage(ctx) {
 
@@ -187,7 +195,7 @@ async function CarHistory(ctx) {
 
             var WashHistoryModel = require('app/data_access/wash_history.js');
         
-            locals.carHistoryEntries = await WashHistoryModel.GetHistoryForCar(car.id);
+            locals.historyEntries = await WashHistoryModel.GetHistoryForCar(car.id);
             locals.fullHistory = true,
             locals.hasCarHistory = true;
             locals.reg_number = regNumber;
@@ -198,6 +206,77 @@ async function CarHistory(ctx) {
         }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/CarWashHistory.mustache', locals);
+}
+
+async function BuildHistoryFilterObject(query)
+{
+    var result = [];
+
+    if (query.reg_number)
+    {
+        result.push({
+            'form_key': 'reg_number',
+            'form_value': query.reg_number,
+            'key': 'Nr rej.',
+            'value': query.reg_number
+        });
+    }
+
+    if (query.washer_id && query.washer_id > 0)
+    {
+        var user = await UserDataAccess.GetUserById(query.washer_id);
+
+        result.push({
+            'form_key': 'washer_id',
+            'form_value': query.washer_id,
+            'key': 'Umył',
+            'value': user.name
+        });
+    }
+
+    if (query.date_from)
+    {
+        result.push({
+            'form_key': 'date_from',
+            'form_value': query.date_from,
+            'key': 'Od',
+            'value': query.date_from
+        });
+    }
+
+    if (query.date_to)
+    {
+        result.push({
+            'form_key': 'date_to',
+            'form_value': query.date_to,
+            'key': 'Do',
+            'value': query.date_to
+        });
+    }
+    return result;
+}
+
+async function ShowWashHistory(ctx) {
+
+    var locals = {
+        'wash_types': await WashTypeDataAccess.GetWashTypes(),
+        'users': await UserDataAccess.GetAllUsersIdAndNames(true),
+        'user': ctx.session.user,
+        'partials': {
+            "AdminMenu" : 'AdminMenu',
+            "CarWashHistoryTable": 'CarWashHistoryTable'
+        }
+    }
+    if ("submit_action" in ctx.request.query) {
+    
+        locals.historyEntries = await WashHistoryDataAccess.GetHistory(ctx.request.query);
+        locals.fullHistory = true;
+        locals.hasHistory = true;
+
+        locals.filters = await BuildHistoryFilterObject(ctx.request.query);
+        locals.hasFilters = locals.filters.length > 0;
+    }
+    ctx.viewModel.content = await Consolidate.mustache('app/views/admin/WashHistory.mustache', locals);
 }
 
 async function DeleteCarWashEntry(ctx) {
@@ -235,7 +314,12 @@ async function UpdateCarWashEntry(ctx) {
 
     var result = await WashHistoryDataAccess.UpdateHistoryEntryById(id, date, wash_type_id, washer_id);
 
-    ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
+    if (ctx.request.body.back_url) {
+        ctx.redirect(ctx.request.body.back_url);
+    }
+    else {
+        ctx.redirect('/admin/carhistory?reg_number=' + carData.reg_number);
+    }
 }
 
 async function CreateCarWashEntry(ctx) {

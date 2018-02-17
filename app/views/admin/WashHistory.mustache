@@ -1,0 +1,104 @@
+{{> AdminMenu}}
+<div id="admin_content">
+    {{#message}}
+    <h3>{{message}}</h3>
+    {{/message}}
+    <a id="show_new_history_entry_button" class="add-new" title="Nowy wpis historii mycia"></a>
+    {{#hasHistory}}
+    <div>
+        <div class="filter_section">
+            <h3 class="filter">Filtr:</h3>
+            {{#hasFilters}}
+            <a id="filter_button" class="my_link">
+                {{#filters}}
+                    <span class="filter_value" data-key="{{form_key}}" data-value="{{form_value}}">{{key}}: {{value}}</span>
+                {{/filters}}
+            </a>
+            {{/hasFilters}}
+        </div>
+        {{> CarWashHistoryTable}}
+    </div>
+    {{/hasHistory}}
+    <div id="history_modal" class="modal">
+        <form action="/admin/history" method="get" class="modal">
+            <div class="form-header">
+                <h3>Historia mycia</h3>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label for="reg_number">Nr rejestracyjny</label>
+                    <input id="reg_number" name="reg_number" type="text" autofocus/>
+                </div>
+                <div class="form-field">
+                    <label for="washer_id">Umył</label>
+                    <select id="washer_id" name="washer_id">
+                        {{#users}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/users}}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="date_from">Od</label>
+                    <input type="text" id="date_from" name="date_from" class="daypicker"/>
+                </div>
+                <div class="form-field">
+                    <label for="date_to">Do</label>
+                    <input type="text" id="date_to" name="date_to" class="daypicker"/>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" name="submit_action" value="show_history">Pokaż historię</button>
+            </div>
+        </form>
+    </div>
+    <div id="edit_wash_entry" class="modal">
+        <form action="" method="post" class="modal">
+            <div class="form-header">
+                <h3>Edycja wpisu</h3>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label for="reg_number">Nr rejestracyjny</label>
+                    <input type="text" id="reg_number" name="reg_number"/>
+                </div>
+                <div class="form-field">
+                    <label for="date">Data</label>
+                    <input type="text" id="date" name="date" class="daypicker"/>
+                </div>
+                <div class="form-field">
+                    <label for="wash_type_id">Typ mycia</label>
+                    <select id="wash_type_id" name="wash_type_id">
+                        {{#wash_types}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/wash_types}}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="washer_id">Umył</label>
+                    <select id="washer_id" name="washer_id">
+                        {{#users}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/users}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit">Aktualizuj</button>
+            </div>
+            <input type="hidden" id="back_url" name="back_url" value=""/>
+        </form>
+    </div>
+    <div id="notes_legend" class="modal">
+        <form action="" class="modal">
+            <div class="form-header">
+                <h3>Legenda</h3>
+            </div>
+            <div class="form-body">
+                <div><div class="icon free"></div><span class="icon_description">Darmowe mycie</span></div>
+                <div><div class="icon used"></div><span class="icon_description">Użyto do darmowego mycia</span></div>
+                <div><div class="icon fast"></div><span class="icon_description">Krótki czas między myciami</span></div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin/washhistory.js"></script>

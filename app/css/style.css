@@ -40,7 +40,7 @@ body > header > nav {
     float: right;
     height: fill-available;
 }
-nav .my_link{
+.my_link{
     margin: 4px 5px;
     padding: 1px 10px;
     cursor:pointer;
@@ -53,7 +53,7 @@ nav .my_link{
     font-weight: bold;
     background-color: #fff;
 }
-nav .my_link.active_link {
+.my_link.active_link {
     color: red;
 }
 nav .my_link.logout {
@@ -180,6 +180,9 @@ input[type="submit"]:disabled {
 .green_indication {
     color: #33cc33;
 }
+.red_indication {
+    color: #EE1C25;
+}
 table {
     margin: 10px;
 }
@@ -259,4 +262,43 @@ textarea#description {
 }
 .small_link {
     text-decoration: none;
+}
+td.attrs span {
+    margin: 0 5px;
+}
+tr.fast {
+    background-color: rgb(255, 190, 193)
+}
+div.icon {
+    border: none;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    color: transparent;
+    font-size: 0;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.fast {
+    background-image: url(../images/exclamation.png);
+}
+div.free {
+    background-image: url(../images/free.png);
+}
+div.used {
+    background-image: url(../images/check.png);
+}
+.filter_value {
+    margin: 5px;
+}
+div.filter_section {
+    margin-left: 10px;
+}
+h3.filter {
+    display: inline-block;
+}
+.icon_description {
+    margin-left: 5px;
+    vertical-align: top;
 }

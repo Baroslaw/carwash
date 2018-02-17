@@ -2,14 +2,16 @@
 
 const KoaRouter = require('koa-router');
 const Consolidate = require('consolidate');
+const Moment = require('moment');
 
 const FREE_WASHING_COUNT = 10;
 
 const router = new KoaRouter();
 
 // TODO - define all data_access requires here
-const WashHistoryDataAccess = require('app/data_access/wash_history.js');
+const WashHistoryDataAccess = require('app/data_access/wash_history');
 const CarDataAccess = require('app/data_access/car');
+const WashTypeDataAccess = require('app/data_access/wash_type');
 
 router.get('/wash', RegistrationNumberForm);
 router.post('/wash', OnSelectWashProgram);
@@ -23,22 +25,29 @@ async function RegistrationNumberForm(ctx) {
         var carId = await CarDataAccess.GetByRegNumberOrCreate(regNumber);
         global.Logger.info(`Car of reg_number ${regNumber} id=${carId}`);
     
-        var WashTypeModel = require('app/data_access/wash_type');
-        
-        var washTypes = await WashTypeModel.GetWashTypes();
         var carData = await CarDataAccess.GetCarDataById(carId);
-    
         var thisWashCount = carData.notUsedWashingCount + 1;
-
         var notUsedHistory = await WashHistoryDataAccess.GetNotUsedHistoryForCar(carId);
+
+        var durationHours = 0;
+        if (carData.lastWashDate != null)
+        {
+            var now = Moment(new Date());
+            var washTime = Moment(carData.lastWashDate);
+            var duration = Moment.duration(now.diff(washTime));
+            durationHours = duration.asHours();
+        }
         
         var locals = {
             "reg_number": carData.reg_number,
-            "wash_types" : washTypes,
+            "wash_types" : await WashTypeDataAccess.GetWashTypes(),
             "id": ctx.params.id,
+            "lastWashDate": carData.lastWashDate,
+            "isFast": carData.lastWashDate != null && durationHours < 48,
+            "lastWashDurationHours": Math.floor(durationHours),
             "washingCountText": WashCountToText(thisWashCount, carData.reg_number),
             "isFreeWash": (thisWashCount >= FREE_WASHING_COUNT),
-            "carHistoryEntries": notUsedHistory,
+            "historyEntries": notUsedHistory,
             "hasCarHistory": notUsedHistory.length > 0,
             "fullHistory": false,
             "user": ctx.session.user,
@@ -115,8 +124,7 @@ async function OnSelectWashProgram(ctx) {
             notUsedWashingCount = 0;
         }
 
-        var WashTypeModel = require('app/data_access/wash_type');
-        var washType = await WashTypeModel.GetWashTypeById(washTypeId)
+        var washType = await WashTypeDataAccess.GetWashTypeById(washTypeId);
         var locals = {
             "reg_number" : carRegNumber,
             "wash_type_text": washType.name,
