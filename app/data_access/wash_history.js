@@ -8,7 +8,7 @@ module.exports = {
     async AddHistory(carId, washProgramId, washingDateTime, personId) {
 
         if (!washingDateTime) {
-            washingDateTime = Moment().format('YYYY-MM-DD HH:mm');
+            washingDateTime = Moment().format('YYYY-MM-DD HH:mm:ss');
         }
 
         // TODO - handle errors here
@@ -102,7 +102,7 @@ module.exports = {
                 (\
                     SELECT MAX(wh2.wash_datetime) \
                     FROM wash_history wh2 \
-                    WHERE wh2.active=1 AND wh1.car_id=wh2.car_id AND wh2.wash_datetime < wh1.wash_datetime\
+                    WHERE wh2.active=1 AND wh1.car_id=wh2.car_id AND wh2.wash_datetime<=wh1.wash_datetime AND wh1.id!=wh2.id \
                 ), \
                 wash_datetime) as delta \
         FROM wash_history wh1 \
@@ -155,7 +155,7 @@ module.exports = {
                 "is_free": r.id == r.used_with_id,
                 "is_used": r.used_with_id != null && r.id != r.used_with_id,
                 "delta": r.delta,
-                "is_fast": r.delta != null && r.delta < 2,
+                "is_fast": r.delta != null && r.delta < 48,
                 "washer_name": r.washer_name,
                 "washer_id": r.washer_id
             }));
