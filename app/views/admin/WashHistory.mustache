@@ -6,7 +6,7 @@
     <a id="show_new_history_entry_button" class="add-new" title="Nowy wpis historii mycia"></a>
     {{#hasHistory}}
     <div>
-        <div class="filter_section">
+        <div class="table_attribute">
             <h3 class="filter">Filtr:</h3>
             {{#hasFilters}}
             <a id="filter_button" class="my_link">
@@ -15,6 +15,16 @@
                 {{/filters}}
             </a>
             {{/hasFilters}}
+        </div>
+        <div class="table_attribute">
+            <h3 class="filter">Strona:</h3>
+            {{#prevPageLink}}
+                <a class="my_link" href="{{prevPageLink}}"><<</a>
+            {{/prevPageLink}}
+            <h3 class="filter">{{currentPage}}</h3>
+            {{#nextPageLink}}
+                <a class="my_link" href="{{nextPageLink}}">>></a>
+            {{/nextPageLink}}
         </div>
         {{> CarWashHistoryTable}}
     </div>

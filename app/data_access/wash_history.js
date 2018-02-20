@@ -4,6 +4,8 @@ const Moment = require('moment');
 
 module.exports = {
 
+    DEFAULT_PAGE_SIZE: 100,
+
     // TODO - add foreign keys constraints in database
     async AddHistory(carId, washProgramId, washingDateTime, personId) {
 
@@ -73,6 +75,11 @@ module.exports = {
         return result;
     },
 
+    GetDefaultPageSize()
+    {
+        return 100;
+    },
+
     async GetLastCarWashDate(car_id) {
 
         var result = await global.DbExecute(
@@ -137,11 +144,24 @@ module.exports = {
             whereClause += ' wh1.person_id=?';
             params.push(options.washer_id);
         }
+
         if (whereClause.length)
         {
             query += ' WHERE' + whereClause;
         }
         query += ' ORDER BY wash_datetime DESC';
+
+        // Apply paging
+        var page = (options.page) ? parseInt(options.page) : 1;
+        if (page < 1) page = 1;
+
+        var pageSize = (options.page_size) ? parseInt(options.page_size) : this.DEFAULT_PAGE_SIZE;
+        if (pageSize < 1) pageSize = 1;
+
+        var startRecord = (page-1) * pageSize;
+        query += ' LIMIT ?,?';
+        params.push(startRecord);
+        params.push(pageSize + 1);  // +1 to check if next size if needed
 
         var result = await global.DbExecute(query, params);
 

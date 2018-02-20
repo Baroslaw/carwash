@@ -169,6 +169,14 @@ async function BuildHistoryFilterObject(query)
     return result;
 }
 
+function CreateLink(baselink, params)
+{
+    var ret = [];
+    for (let d in params)
+      ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(params[d]));
+    return baselink + '?' + ret.join('&');
+ }
+
 async function ShowWashHistory(ctx) {
 
     var locals = {
@@ -189,6 +197,22 @@ async function ShowWashHistory(ctx) {
 
         locals.filters = await BuildHistoryFilterObject(ctx.request.query);
         locals.hasFilters = locals.filters.length > 0;
+
+        // Handle paging
+        var page = (ctx.request.query.page) ? parseInt(ctx.request.query.page) : 1;
+        if (page < 1) page = 1;
+
+        locals.currentPage = page;
+
+        delete ctx.request.query.page;  // This will be overwritten
+        if (page > 1) {
+            locals.prevPageLink = CreateLink("/admin/history", Object.assign({page: page - 1}, ctx.request.query));
+        }
+        if (locals.historyEntries.length > WashHistoryDataAccess.DEFAULT_PAGE_SIZE)
+        {
+            locals.historyEntries.splice(WashHistoryDataAccess.DEFAULT_PAGE_SIZE, 1);
+            locals.nextPageLink = CreateLink("/admin/history", Object.assign({page: page + 1}, ctx.request.query));
+        }
     }
     ctx.viewModel.content = await Consolidate.mustache('app/views/admin/WashHistory.mustache', locals);
 }
